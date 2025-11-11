@@ -25,18 +25,45 @@ repo/
 
 ## Local Setup
 
-### Prerequisites
-- Python 3.11+
-- Node.js 18+
-- PostgreSQL 14+
+### Option 1: Docker (Recommended)
 
-### 1. Setup Environment
+**Prerequisites**: Docker and Docker Compose
+
+```bash
+# Start all services (PostgreSQL + API + Frontend)
+docker-compose up
+
+# Or run in background
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+The seed script runs automatically on first start. Access:
+- Frontend: http://localhost:3000
+- API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
+
+**Development mode** (with hot-reload for API):
+```bash
+docker-compose -f docker-compose.dev.yml up
+```
+
+### Option 2: Manual Setup
+
+**Prerequisites**: Python 3.11+, Node.js 18+, PostgreSQL 14+
+
+#### 1. Setup Environment
 ```bash
 cp .env.example .env
 # Edit .env with your database credentials
 ```
 
-### 2. Backend
+#### 2. Backend
 ```bash
 cd apps/api
 python -m venv venv
@@ -55,7 +82,7 @@ python seed.py
 uvicorn main:app --reload --port 8000
 ```
 
-### 3. Frontend
+#### 3. Frontend
 ```bash
 cd apps/frontend
 npm install
@@ -63,7 +90,7 @@ npm run dev
 # Open http://localhost:3000
 ```
 
-### 4. Run Tests
+#### 4. Run Tests
 ```bash
 # Clearing engine tests
 cd apps/engine
