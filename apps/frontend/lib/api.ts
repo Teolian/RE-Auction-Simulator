@@ -56,6 +56,16 @@ export interface Match {
   created_at: string
 }
 
+export interface Interview {
+  iv_id: number
+  match_id: number
+  status: 'scheduled' | 'completed' | 'cancelled'
+  when_ts: string
+  contact: string | null
+  notes: string | null
+  created_at: string
+}
+
 export interface ClearingResult {
   auction_id: number
   cleared_price: number | null
@@ -191,6 +201,29 @@ export const api = {
 
   submitBid: async (data: Partial<Bid>): Promise<Bid> => {
     const res = await fetch(`${API_BASE}/api/bids`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    return await handleResponse(res)
+  },
+
+  // Interviews
+  getInterviews: async (matchId?: number): Promise<Interview[]> => {
+    try {
+      const url = matchId
+        ? `${API_BASE}/api/interviews?match_id=${matchId}`
+        : `${API_BASE}/api/interviews`
+      const res = await fetch(url, { cache: 'no-store' })
+      return await handleResponse(res)
+    } catch (error) {
+      console.error('Failed to fetch interviews:', error)
+      return []
+    }
+  },
+
+  createInterview: async (data: Partial<Interview>): Promise<Interview> => {
+    const res = await fetch(`${API_BASE}/api/interviews`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
