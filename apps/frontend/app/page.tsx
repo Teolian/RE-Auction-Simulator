@@ -239,9 +239,9 @@ export default function Home() {
                 <span>View awarded matches & prices</span>
               </li>
             </ol>
-            <button className="w-full mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-14">
+            <Link href="/bids/create" className="block w-full mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-14 text-center">
               Submit Bid
-            </button>
+            </Link>
           </div>
         </div>
       </div>
