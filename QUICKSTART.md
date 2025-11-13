@@ -57,26 +57,22 @@ make dev
 
 ## Troubleshooting
 
-**If containers fail to start:**
+**If you see errors on the frontend:**
+1. Wait 10-15 seconds for all services to fully start
+2. Check API is running: `curl http://localhost:8000/healthz`
+3. View logs: `make logs`
+
+**Common issues:**
+- **"Failed to connect to API"** - API not ready yet, wait or run `make restart`
+- **"No auctions found"** - Run seed script: `make seed`
+- **Port already in use** - Stop other services or change ports
+
+See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for detailed solutions.
+
+**Complete reset:**
 ```bash
-# Clean everything and rebuild
 make clean
 make init
-```
-
-**Check container status:**
-```bash
-make ps
-docker-compose logs api
-docker-compose logs frontend
-docker-compose logs db
-```
-
-**Reset database:**
-```bash
-make down
-docker volume rm re-auction-simulator_postgres_data
-make up
 ```
 
 ## Manual Setup (Without Docker)

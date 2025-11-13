@@ -149,6 +149,15 @@ The seeded data includes 2 auctions ready for demo:
 - `POST /api/interviews` - Create interview
 - `GET /healthz` - Health check
 
+## Troubleshooting
+
+If you encounter issues, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for detailed solutions.
+
+Quick fixes:
+- Frontend error: Wait 15s for services to start, then refresh
+- No data: Run `make seed`
+- Reset everything: `make clean && make init`
+
 ## Deployment
 - **Frontend**: Vercel
 - **Backend**: Railway/Render
