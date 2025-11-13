@@ -142,7 +142,7 @@ def lock_auction(auction_id: int, db: Session = Depends(get_db)):
     if auction.status != models.AuctionStatus.OPEN:
         raise HTTPException(status_code=400, detail="Can only lock open auctions")
 
-    auction.status = models.AuctionStatus.LOCKED
+    auction.status = models.AuctionStatus.LOCKED.value
     db.commit()
 
     # Get bid count
@@ -216,7 +216,7 @@ def clear_auction(auction_id: int, db: Session = Depends(get_db)):
         db.add(db_match)
 
     # Update auction
-    auction.status = models.AuctionStatus.CLEARED
+    auction.status = models.AuctionStatus.CLEARED.value
     auction.cleared_price = result.cleared_price
     auction.cleared_volume = result.cleared_volume
     db.commit()

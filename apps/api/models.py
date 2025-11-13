@@ -65,7 +65,7 @@ class User(Base):
     org_id = Column(Integer, ForeignKey("orgs.org_id"), nullable=False)
     email = Column(String(255), unique=True, nullable=False, index=True)
     role = Column(Enum(UserRole, name='user_role', create_type=False), nullable=False)
-    status = Column(Enum(UserStatus, name='user_status', create_type=False), default=UserStatus.ACTIVE)
+    status = Column(Enum(UserStatus, name='user_status', create_type=False), default='active')
     pwd_hash = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -93,7 +93,7 @@ class Auction(Base):
     area = Column(String(100), nullable=False, index=True)
     starts_at = Column(DateTime, nullable=False, index=True)
     ends_at = Column(DateTime, nullable=False)
-    status = Column(Enum(AuctionStatus, name='auction_status', create_type=False), default=AuctionStatus.DRAFT)
+    status = Column(Enum(AuctionStatus, name='auction_status', create_type=False), default='draft')
     cleared_price = Column(Float, nullable=True)
     cleared_volume = Column(Float, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -158,7 +158,7 @@ class Interview(Base):
 
     iv_id = Column(Integer, primary_key=True, index=True)
     match_id = Column(Integer, ForeignKey("matches.match_id"), nullable=False, index=True)
-    status = Column(Enum(InterviewStatus, name='interview_status', create_type=False), default=InterviewStatus.SCHEDULED)
+    status = Column(Enum(InterviewStatus, name='interview_status', create_type=False), default='scheduled')
     when_ts = Column(DateTime, nullable=False)
     contact = Column(String(255))
     notes = Column(Text)
@@ -172,7 +172,7 @@ class Contract(Base):
     contract_id = Column(Integer, primary_key=True, index=True)
     match_id = Column(Integer, ForeignKey("matches.match_id"), nullable=False, index=True)
     draft_url = Column(String(500))
-    status = Column(Enum(ContractStatus, name='contract_status', create_type=False), default=ContractStatus.DRAFT)
+    status = Column(Enum(ContractStatus, name='contract_status', create_type=False), default='draft')
     created_at = Column(DateTime, default=datetime.utcnow)
 
     match = relationship("Match", back_populates="contracts")
