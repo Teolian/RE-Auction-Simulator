@@ -22,10 +22,10 @@ def seed_data():
     db.commit()
 
     # Create organizations
-    seller_org = models.Org(name="Tokyo Solar Corp", type=models.OrgType.SELLER)
-    buyer_org1 = models.Org(name="Kansai Energy Trading", type=models.OrgType.BUYER)
-    buyer_org2 = models.Org(name="Hokkaido Power Co", type=models.OrgType.BUYER)
-    operator_org = models.Org(name="JEPX Auction Operator", type=models.OrgType.OPERATOR)
+    seller_org = models.Org(name="Tokyo Solar Corp", type=models.OrgType.SELLER.value)
+    buyer_org1 = models.Org(name="Kansai Energy Trading", type=models.OrgType.BUYER.value)
+    buyer_org2 = models.Org(name="Hokkaido Power Co", type=models.OrgType.BUYER.value)
+    operator_org = models.Org(name="JEPX Auction Operator", type=models.OrgType.OPERATOR.value)
 
     db.add_all([seller_org, buyer_org1, buyer_org2, operator_org])
     db.commit()
@@ -37,25 +37,25 @@ def seed_data():
         models.User(
             org_id=seller_org.org_id,
             email="seller@tokyo-solar.jp",
-            role=models.UserRole.SELLER,
+            role=models.UserRole.SELLER.value,
             pwd_hash=bcrypt.hash("password123")
         ),
         models.User(
             org_id=buyer_org1.org_id,
             email="buyer@kansai-energy.jp",
-            role=models.UserRole.BUYER,
+            role=models.UserRole.BUYER.value,
             pwd_hash=bcrypt.hash("password123")
         ),
         models.User(
             org_id=buyer_org2.org_id,
             email="buyer@hokkaido-power.jp",
-            role=models.UserRole.BUYER,
+            role=models.UserRole.BUYER.value,
             pwd_hash=bcrypt.hash("password123")
         ),
         models.User(
             org_id=operator_org.org_id,
             email="operator@jepx.jp",
-            role=models.UserRole.OPERATOR,
+            role=models.UserRole.OPERATOR.value,
             pwd_hash=bcrypt.hash("password123")
         ),
     ]
@@ -68,21 +68,21 @@ def seed_data():
     plants = [
         models.Plant(
             org_id=seller_org.org_id,
-            type=models.PlantType.PV,
+            type=models.PlantType.PV.value,
             prefecture="Tokyo",
             ac_mw=50.0,
             profile_json={"commissioned": "2020-04", "panels": 125000}
         ),
         models.Plant(
             org_id=seller_org.org_id,
-            type=models.PlantType.WIND,
+            type=models.PlantType.WIND.value,
             prefecture="Akita",
             ac_mw=30.0,
             profile_json={"commissioned": "2021-11", "turbines": 10}
         ),
         models.Plant(
             org_id=seller_org.org_id,
-            type=models.PlantType.PV,
+            type=models.PlantType.PV.value,
             prefecture="Osaka",
             ac_mw=25.0,
             profile_json={"commissioned": "2022-06", "panels": 62500}
@@ -96,18 +96,18 @@ def seed_data():
     # Create auctions
     now = datetime.now()
     auction1 = models.Auction(
-        mode=models.AuctionMode.UNIFORM_PRICE,
+        mode=models.AuctionMode.UNIFORM_PRICE.value,
         area="Kanto",
         starts_at=now - timedelta(days=2),
         ends_at=now + timedelta(days=5),
-        status=models.AuctionStatus.OPEN
+        status=models.AuctionStatus.OPEN.value
     )
     auction2 = models.Auction(
-        mode=models.AuctionMode.PAY_AS_BID,
+        mode=models.AuctionMode.PAY_AS_BID.value,
         area="Kansai",
         starts_at=now - timedelta(days=1),
         ends_at=now + timedelta(days=7),
-        status=models.AuctionStatus.OPEN
+        status=models.AuctionStatus.OPEN.value
     )
 
     db.add_all([auction1, auction2])
