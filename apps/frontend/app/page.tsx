@@ -159,9 +159,9 @@ export default function Home() {
                 <span>Publish results to participants</span>
               </li>
             </ol>
-            <button className="w-full mt-6 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition-colors text-14">
+            <Link href="/auctions/create" className="block w-full mt-6 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition-colors text-14 text-center">
               Create Auction
-            </button>
+            </Link>
           </div>
 
           {/* Seller Pipeline */}
