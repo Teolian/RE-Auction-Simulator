@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { api } from '@/lib/api'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export default function CreateContract() {
   const router = useRouter()
@@ -50,12 +51,11 @@ export default function CreateContract() {
 
   return (
     <div className="max-w-[800px] mx-auto">
-      {/* Breadcrumb */}
-      <div className="mb-6">
-        <Link href="/contracts" className="text-14 text-primary hover:underline">
-          ← Back to Contracts
-        </Link>
-      </div>
+      <Breadcrumbs items={[
+        { label: 'Dashboard', href: '/' },
+        { label: 'Contracts', href: '/contracts' },
+        { label: 'Create New Contract' }
+      ]} />
 
       {/* Header */}
       <div className="mb-8">

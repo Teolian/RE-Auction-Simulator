@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { api, Match } from '@/lib/api'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export default function CreateInterview() {
   const router = useRouter()
@@ -98,12 +99,11 @@ export default function CreateInterview() {
 
   return (
     <div className="max-w-[800px] mx-auto">
-      {/* Breadcrumb */}
-      <div className="mb-6">
-        <Link href="/interviews" className="text-14 text-primary hover:underline">
-          ← Back to Interviews
-        </Link>
-      </div>
+      <Breadcrumbs items={[
+        { label: 'Dashboard', href: '/' },
+        { label: 'Interviews', href: '/interviews' },
+        { label: 'Schedule New Interview' }
+      ]} />
 
       {/* Header */}
       <div className="mb-8">

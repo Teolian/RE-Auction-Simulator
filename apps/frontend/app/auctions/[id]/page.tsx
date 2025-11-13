@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { api, Auction, Lot, Bid, Report, Plant } from '@/lib/api'
 import { formatInTimeZone } from 'date-fns-tz'
 import ReactECharts from 'echarts-for-react'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 const TOKYO_TZ = 'Asia/Tokyo'
 
@@ -230,12 +231,12 @@ export default function AuctionDetail() {
 
   return (
     <div className="max-w-[1400px] mx-auto">
-      {/* Breadcrumb */}
-      <div className="mb-6">
-        <Link href="/" className="text-14 text-primary hover:underline">
-          ← Back to Auctions
-        </Link>
-      </div>
+      {/* Breadcrumbs */}
+      <Breadcrumbs items={[
+        { label: 'Dashboard', href: '/' },
+        { label: 'Auctions', href: '/' },
+        { label: `${auction.area} Auction #${auctionId}` }
+      ]} />
 
       {/* Auction Header */}
       <div className="bg-white rounded-lg border border-gray-200 p-8 mb-6">

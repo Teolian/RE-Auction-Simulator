@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { api, Interview } from '@/lib/api'
 import { formatInTimeZone } from 'date-fns-tz'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 const TOKYO_TZ = 'Asia/Tokyo'
 
@@ -75,6 +76,11 @@ export default function InterviewsList() {
 
   return (
     <div className="max-w-[1200px] mx-auto">
+      <Breadcrumbs items={[
+        { label: 'Dashboard', href: '/' },
+        { label: 'Interviews (面談)' }
+      ]} />
+
       {/* Header */}
       <div className="mb-8">
         <div className="flex justify-between items-start mb-4">

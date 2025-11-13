@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Navigation from '@/components/Navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,13 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="min-h-screen bg-gray-50">
-          <header className="bg-white border-b border-gray-200">
-            <div className="container mx-auto px-8 py-4">
-              <h1 className="text-24 font-semibold text-gray-900">
-                RE-Auction Simulator
-              </h1>
-            </div>
-          </header>
+          <Navigation />
           <main className="container mx-auto px-8 py-8">
             {children}
           </main>
