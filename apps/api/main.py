@@ -7,7 +7,7 @@ import sys
 import os
 
 # Add engine path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'engine'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'engine'))
 
 from database import get_db, engine
 import models
@@ -75,7 +75,7 @@ def create_lot(lot: LotCreate, db: Session = Depends(get_db)):
     auction = db.query(models.Auction).filter(models.Auction.auction_id == lot.auction_id).first()
     if not auction:
         raise HTTPException(status_code=404, detail="Auction not found")
-    if auction.status not in [models.AuctionStatus.DRAFT, models.AuctionStatus.OPEN]:
+    if auction.status not in ['draft', 'open']:
         raise HTTPException(status_code=400, detail="Cannot add lots to locked/cleared auction")
 
     # Validate volumes
@@ -106,7 +106,7 @@ def submit_bid(bid: BidCreate, db: Session = Depends(get_db)):
     auction = db.query(models.Auction).filter(models.Auction.auction_id == bid.auction_id).first()
     if not auction:
         raise HTTPException(status_code=404, detail="Auction not found")
-    if auction.status != models.AuctionStatus.OPEN:
+    if auction.status != 'open':
         raise HTTPException(status_code=400, detail="Auction is not open for bidding")
 
     db_bid = models.Bid(**bid.dict())
@@ -123,7 +123,7 @@ def list_bids(auction_id: int = None, org_id: int = None, db: Session = Depends(
     if auction_id:
         # Check if auction is cleared before showing all bids
         auction = db.query(models.Auction).filter(models.Auction.auction_id == auction_id).first()
-        if auction and auction.status not in [models.AuctionStatus.CLEARED, models.AuctionStatus.PUBLISHED]:
+        if auction and auction.status not in ['cleared', 'published']:
             if not org_id:
                 raise HTTPException(status_code=403, detail="Cannot view bids before clearing")
         query = query.filter(models.Bid.auction_id == auction_id)
@@ -139,10 +139,10 @@ def lock_auction(auction_id: int, db: Session = Depends(get_db)):
     auction = db.query(models.Auction).filter(models.Auction.auction_id == auction_id).first()
     if not auction:
         raise HTTPException(status_code=404, detail="Auction not found")
-    if auction.status != models.AuctionStatus.OPEN:
+    if auction.status != 'open':
         raise HTTPException(status_code=400, detail="Can only lock open auctions")
 
-    auction.status = models.AuctionStatus.LOCKED.value
+    auction.status = 'locked'
     db.commit()
 
     # Get bid count
@@ -162,7 +162,7 @@ def clear_auction(auction_id: int, db: Session = Depends(get_db)):
     auction = db.query(models.Auction).filter(models.Auction.auction_id == auction_id).first()
     if not auction:
         raise HTTPException(status_code=404, detail="Auction not found")
-    if auction.status != models.AuctionStatus.LOCKED:
+    if auction.status != 'locked':
         raise HTTPException(status_code=400, detail="Auction must be locked before clearing")
 
     # Get lots and bids
@@ -216,7 +216,7 @@ def clear_auction(auction_id: int, db: Session = Depends(get_db)):
         db.add(db_match)
 
     # Update auction
-    auction.status = models.AuctionStatus.CLEARED.value
+    auction.status = 'cleared'
     auction.cleared_price = result.cleared_price
     auction.cleared_volume = result.cleared_volume
     db.commit()
@@ -236,7 +236,7 @@ def get_report(auction_id: int, db: Session = Depends(get_db)):
     auction = db.query(models.Auction).filter(models.Auction.auction_id == auction_id).first()
     if not auction:
         raise HTTPException(status_code=404, detail="Auction not found")
-    if auction.status not in [models.AuctionStatus.CLEARED, models.AuctionStatus.PUBLISHED]:
+    if auction.status not in ['cleared', 'published']:
         raise HTTPException(status_code=400, detail="Auction not yet cleared")
 
     lots_count = db.query(models.Lot).filter(models.Lot.auction_id == auction_id).count()
