@@ -51,7 +51,7 @@ class Org(Base):
 
     org_id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
-    type = Column(Enum(OrgType, name='org_type', create_type=False), nullable=False)
+    type = Column(Enum('seller', 'buyer', 'operator', name='org_type', create_type=False), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     users = relationship("User", back_populates="org")
@@ -64,8 +64,8 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, index=True)
     org_id = Column(Integer, ForeignKey("orgs.org_id"), nullable=False)
     email = Column(String(255), unique=True, nullable=False, index=True)
-    role = Column(Enum(UserRole, name='user_role', create_type=False), nullable=False)
-    status = Column(Enum(UserStatus, name='user_status', create_type=False), default='active')
+    role = Column(Enum('seller', 'buyer', 'operator', 'admin', name='user_role', create_type=False), nullable=False)
+    status = Column(Enum('active', 'inactive', 'suspended', name='user_status', create_type=False), default='active')
     pwd_hash = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -76,7 +76,7 @@ class Plant(Base):
 
     plant_id = Column(Integer, primary_key=True, index=True)
     org_id = Column(Integer, ForeignKey("orgs.org_id"), nullable=False)
-    type = Column(Enum(PlantType, name='plant_type', create_type=False), nullable=False)
+    type = Column(Enum('pv', 'wind', name='plant_type', create_type=False), nullable=False)
     prefecture = Column(String(100))
     ac_mw = Column(Float, nullable=False)
     profile_json = Column(JSON)
@@ -89,11 +89,11 @@ class Auction(Base):
     __tablename__ = "auctions"
 
     auction_id = Column(Integer, primary_key=True, index=True)
-    mode = Column(Enum(AuctionMode, name='auction_mode', create_type=False), nullable=False)
+    mode = Column(Enum('uniform_price', 'pay_as_bid', name='auction_mode', create_type=False), nullable=False)
     area = Column(String(100), nullable=False, index=True)
     starts_at = Column(DateTime, nullable=False, index=True)
     ends_at = Column(DateTime, nullable=False)
-    status = Column(Enum(AuctionStatus, name='auction_status', create_type=False), default='draft')
+    status = Column(Enum('draft', 'open', 'locked', 'cleared', 'published', name='auction_status', create_type=False), default='draft')
     cleared_price = Column(Float, nullable=True)
     cleared_volume = Column(Float, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -158,7 +158,7 @@ class Interview(Base):
 
     iv_id = Column(Integer, primary_key=True, index=True)
     match_id = Column(Integer, ForeignKey("matches.match_id"), nullable=False, index=True)
-    status = Column(Enum(InterviewStatus, name='interview_status', create_type=False), default='scheduled')
+    status = Column(Enum('scheduled', 'completed', 'cancelled', name='interview_status', create_type=False), default='scheduled')
     when_ts = Column(DateTime, nullable=False)
     contact = Column(String(255))
     notes = Column(Text)
@@ -172,7 +172,7 @@ class Contract(Base):
     contract_id = Column(Integer, primary_key=True, index=True)
     match_id = Column(Integer, ForeignKey("matches.match_id"), nullable=False, index=True)
     draft_url = Column(String(500))
-    status = Column(Enum(ContractStatus, name='contract_status', create_type=False), default='draft')
+    status = Column(Enum('draft', 'pending', 'signed', 'cancelled', name='contract_status', create_type=False), default='draft')
     created_at = Column(DateTime, default=datetime.utcnow)
 
     match = relationship("Match", back_populates="contracts")
