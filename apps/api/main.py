@@ -305,6 +305,52 @@ def list_interviews(match_id: int = None, db: Session = Depends(get_db)):
     return query.all()
 
 
+# Contracts
+@app.post("/api/contracts", response_model=ContractResponse)
+def create_contract(contract: ContractCreate, db: Session = Depends(get_db)):
+    """Create contract"""
+    # Validate match exists
+    match = db.query(models.Match).filter(models.Match.match_id == contract.match_id).first()
+    if not match:
+        raise HTTPException(status_code=404, detail="Match not found")
+
+    db_contract = models.Contract(**contract.dict())
+    db.add(db_contract)
+    db.commit()
+    db.refresh(db_contract)
+    return db_contract
+
+
+@app.get("/api/contracts", response_model=List[ContractResponse])
+def list_contracts(match_id: int = None, status: str = None, db: Session = Depends(get_db)):
+    """List contracts"""
+    query = db.query(models.Contract)
+    if match_id:
+        query = query.filter(models.Contract.match_id == match_id)
+    if status:
+        query = query.filter(models.Contract.status == status)
+    return query.all()
+
+
+@app.post("/api/contracts/{contract_id}/sign")
+def sign_contract(contract_id: int, db: Session = Depends(get_db)):
+    """Sign contract (mark as signed)"""
+    contract = db.query(models.Contract).filter(models.Contract.contract_id == contract_id).first()
+    if not contract:
+        raise HTTPException(status_code=404, detail="Contract not found")
+    if contract.status not in ['draft', 'pending']:
+        raise HTTPException(status_code=400, detail="Can only sign draft or pending contracts")
+
+    contract.status = 'signed'
+    db.commit()
+
+    return {
+        "contract_id": contract_id,
+        "status": "signed",
+        "message": "Contract signed successfully"
+    }
+
+
 # Orgs
 @app.post("/api/orgs", response_model=OrgResponse)
 def create_org(org: OrgCreate, db: Session = Depends(get_db)):

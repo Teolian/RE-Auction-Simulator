@@ -198,3 +198,20 @@ class ReportResponse(BaseModel):
     total_lots: int
     total_bids: int
     matches: List[MatchResponse]
+
+
+# Contract schemas
+class ContractCreate(BaseModel):
+    match_id: int
+    draft_url: Optional[str] = None
+
+
+class ContractResponse(BaseModel):
+    contract_id: int
+    match_id: int
+    draft_url: Optional[str]
+    status: ContractStatus
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

@@ -246,6 +246,84 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Post-Clearing Workflow */}
+      <div className="mb-8">
+        <h2 className="text-24 font-semibold mb-4">Post-Clearing Workflow</h2>
+        <div className="bg-gradient-to-r from-indigo-50 to-teal-50 rounded-lg border border-indigo-100 p-6">
+          <div className="grid md:grid-cols-4 gap-4">
+            {/* Step 1: Clearing */}
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span className="text-14 font-bold text-blue-600">1</span>
+                </div>
+                <h3 className="text-16 font-semibold">Auction Cleared</h3>
+              </div>
+              <p className="text-13 text-gray-600">
+                Lots and bids matched by clearing algorithm. Participants notified of results.
+              </p>
+            </div>
+
+            {/* Step 2: Interview */}
+            <div className="bg-white rounded-lg border border-indigo-200 p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                  <span className="text-14 font-bold text-indigo-600">2</span>
+                </div>
+                <h3 className="text-16 font-semibold">面談 (Interview)</h3>
+              </div>
+              <p className="text-13 text-gray-600 mb-3">
+                Buyer and seller meet to discuss terms, verify plant specs.
+              </p>
+              <Link
+                href="/interviews"
+                className="inline-flex items-center gap-1 text-13 text-indigo-600 hover:text-indigo-700 font-medium"
+              >
+                View Interviews
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+
+            {/* Step 3: Contract */}
+            <div className="bg-white rounded-lg border border-teal-200 p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
+                  <span className="text-14 font-bold text-teal-600">3</span>
+                </div>
+                <h3 className="text-16 font-semibold">Contract Signing</h3>
+              </div>
+              <p className="text-13 text-gray-600 mb-3">
+                Legal agreement drafted and signed by both parties.
+              </p>
+              <Link
+                href="/contracts"
+                className="inline-flex items-center gap-1 text-13 text-teal-600 hover:text-teal-700 font-medium"
+              >
+                View Contracts
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+
+            {/* Step 4: Delivery */}
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="text-14 font-bold text-green-600">4</span>
+                </div>
+                <h3 className="text-16 font-semibold">Delivery</h3>
+              </div>
+              <p className="text-13 text-gray-600">
+                Energy delivered per contract terms. Payment settlement executed.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Error State */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">

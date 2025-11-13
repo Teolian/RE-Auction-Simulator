@@ -66,6 +66,14 @@ export interface Interview {
   created_at: string
 }
 
+export interface Contract {
+  contract_id: number
+  match_id: number
+  draft_url: string | null
+  status: 'draft' | 'pending' | 'signed' | 'cancelled'
+  created_at: string
+}
+
 export interface ClearingResult {
   auction_id: number
   cleared_price: number | null
@@ -227,6 +235,39 @@ export const api = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
+    })
+    return await handleResponse(res)
+  },
+
+  // Contracts
+  getContracts: async (matchId?: number, status?: string): Promise<Contract[]> => {
+    try {
+      const params = new URLSearchParams()
+      if (matchId) params.append('match_id', matchId.toString())
+      if (status) params.append('status', status)
+      const url = params.toString()
+        ? `${API_BASE}/api/contracts?${params}`
+        : `${API_BASE}/api/contracts`
+      const res = await fetch(url, { cache: 'no-store' })
+      return await handleResponse(res)
+    } catch (error) {
+      console.error('Failed to fetch contracts:', error)
+      return []
+    }
+  },
+
+  createContract: async (data: Partial<Contract>): Promise<Contract> => {
+    const res = await fetch(`${API_BASE}/api/contracts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    return await handleResponse(res)
+  },
+
+  signContract: async (id: number) => {
+    const res = await fetch(`${API_BASE}/api/contracts/${id}/sign`, {
+      method: 'POST',
     })
     return await handleResponse(res)
   },
