@@ -65,16 +65,32 @@ export interface Report {
   matches: Match[]
 }
 
+const handleResponse = async (res: Response) => {
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status} ${res.statusText}`)
+  }
+  const contentType = res.headers.get('content-type')
+  if (!contentType || !contentType.includes('application/json')) {
+    throw new Error('API returned non-JSON response')
+  }
+  return res.json()
+}
+
 export const api = {
   // Auctions
   getAuctions: async (): Promise<Auction[]> => {
-    const res = await fetch(`${API_BASE}/api/auctions`, { cache: 'no-store' })
-    return res.json()
+    try {
+      const res = await fetch(`${API_BASE}/api/auctions`, { cache: 'no-store' })
+      return await handleResponse(res)
+    } catch (error) {
+      console.error('Failed to fetch auctions:', error)
+      return []
+    }
   },
 
   getAuction: async (id: number): Promise<Auction> => {
     const res = await fetch(`${API_BASE}/api/auctions/${id}`, { cache: 'no-store' })
-    return res.json()
+    return await handleResponse(res)
   },
 
   createAuction: async (data: Partial<Auction>): Promise<Auction> => {
@@ -83,35 +99,40 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-    return res.json()
+    return await handleResponse(res)
   },
 
   lockAuction: async (id: number) => {
     const res = await fetch(`${API_BASE}/api/auctions/${id}/lock`, {
       method: 'POST',
     })
-    return res.json()
+    return await handleResponse(res)
   },
 
   clearAuction: async (id: number): Promise<ClearingResult> => {
     const res = await fetch(`${API_BASE}/api/auctions/${id}/clear`, {
       method: 'POST',
     })
-    return res.json()
+    return await handleResponse(res)
   },
 
   getReport: async (id: number): Promise<Report> => {
     const res = await fetch(`${API_BASE}/api/auctions/${id}/report`, { cache: 'no-store' })
-    return res.json()
+    return await handleResponse(res)
   },
 
   // Lots
   getLots: async (auctionId?: number): Promise<Lot[]> => {
-    const url = auctionId
-      ? `${API_BASE}/api/lots?auction_id=${auctionId}`
-      : `${API_BASE}/api/lots`
-    const res = await fetch(url, { cache: 'no-store' })
-    return res.json()
+    try {
+      const url = auctionId
+        ? `${API_BASE}/api/lots?auction_id=${auctionId}`
+        : `${API_BASE}/api/lots`
+      const res = await fetch(url, { cache: 'no-store' })
+      return await handleResponse(res)
+    } catch (error) {
+      console.error('Failed to fetch lots:', error)
+      return []
+    }
   },
 
   createLot: async (data: Partial<Lot>): Promise<Lot> => {
@@ -120,16 +141,21 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-    return res.json()
+    return await handleResponse(res)
   },
 
   // Bids
   getBids: async (auctionId?: number, orgId?: number): Promise<Bid[]> => {
-    const params = new URLSearchParams()
-    if (auctionId) params.append('auction_id', auctionId.toString())
-    if (orgId) params.append('org_id', orgId.toString())
-    const res = await fetch(`${API_BASE}/api/bids?${params}`, { cache: 'no-store' })
-    return res.json()
+    try {
+      const params = new URLSearchParams()
+      if (auctionId) params.append('auction_id', auctionId.toString())
+      if (orgId) params.append('org_id', orgId.toString())
+      const res = await fetch(`${API_BASE}/api/bids?${params}`, { cache: 'no-store' })
+      return await handleResponse(res)
+    } catch (error) {
+      console.error('Failed to fetch bids:', error)
+      return []
+    }
   },
 
   submitBid: async (data: Partial<Bid>): Promise<Bid> => {
@@ -138,12 +164,12 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     })
-    return res.json()
+    return await handleResponse(res)
   },
 
   // Health
   healthCheck: async () => {
     const res = await fetch(`${API_BASE}/healthz`)
-    return res.json()
+    return await handleResponse(res)
   },
 }

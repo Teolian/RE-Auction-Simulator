@@ -10,6 +10,7 @@ const TOKYO_TZ = 'Asia/Tokyo'
 export default function Home() {
   const [auctions, setAuctions] = useState<Auction[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     loadAuctions()
@@ -19,8 +20,10 @@ export default function Home() {
     try {
       const data = await api.getAuctions()
       setAuctions(data)
+      setError(null)
     } catch (error) {
       console.error('Failed to load auctions:', error)
+      setError('Failed to connect to API. Please check if the backend is running.')
     } finally {
       setLoading(false)
     }
@@ -51,7 +54,20 @@ export default function Home() {
         <h1 className="text-32 font-semibold">Auctions</h1>
       </div>
 
-      {auctions.length === 0 ? (
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <p className="text-red-800 font-medium">Error</p>
+          <p className="text-red-600 text-14">{error}</p>
+          <button
+            onClick={loadAuctions}
+            className="mt-3 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-14"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {auctions.length === 0 && !error ? (
         <div className="bg-white rounded-lg border border-gray-200 p-16 text-center">
           <p className="text-gray-500 mb-4">No auctions found</p>
           <p className="text-14 text-gray-400">
