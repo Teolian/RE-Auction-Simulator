@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { api, Auction, Plant } from '@/lib/api'
 
 export default function CreateLot() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [dataLoading, setDataLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -15,7 +16,7 @@ export default function CreateLot() {
   const [plants, setPlants] = useState<Plant[]>([])
 
   const [formData, setFormData] = useState({
-    auction_id: '',
+    auction_id: searchParams.get('auction_id') || '',
     plant_id: '',
     min_vol_mwh: '',
     max_vol_mwh: '',

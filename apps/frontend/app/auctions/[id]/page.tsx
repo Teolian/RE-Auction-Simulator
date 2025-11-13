@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { api, Auction, Lot, Bid, Report } from '@/lib/api'
+import { api, Auction, Lot, Bid, Report, Plant } from '@/lib/api'
 import { formatInTimeZone } from 'date-fns-tz'
 import ReactECharts from 'echarts-for-react'
 
@@ -15,6 +15,7 @@ export default function AuctionDetail() {
 
   const [auction, setAuction] = useState<Auction | null>(null)
   const [lots, setLots] = useState<Lot[]>([])
+  const [plants, setPlants] = useState<Plant[]>([])
   const [bids, setBids] = useState<Bid[]>([])
   const [report, setReport] = useState<Report | null>(null)
   const [loading, setLoading] = useState(true)
@@ -26,12 +27,14 @@ export default function AuctionDetail() {
 
   const loadData = async () => {
     try {
-      const [auctionData, lotsData] = await Promise.all([
+      const [auctionData, lotsData, plantsData] = await Promise.all([
         api.getAuction(auctionId),
         api.getLots(auctionId),
+        api.getPlants(),
       ])
       setAuction(auctionData)
       setLots(lotsData)
+      setPlants(plantsData)
 
       if (auctionData.status === 'cleared' || auctionData.status === 'published') {
         const reportData = await api.getReport(auctionId)
@@ -43,6 +46,20 @@ export default function AuctionDetail() {
       console.error('Failed to load data:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleOpen = async () => {
+    if (!confirm('Open this auction for bidding?\n\nMake sure all lots are configured correctly.')) return
+    setProcessing(true)
+    try {
+      await api.openAuction(auctionId)
+      await loadData()
+      alert('Auction opened successfully. Bidding window is now active.')
+    } catch (error) {
+      alert('Failed to open auction: ' + (error as Error).message)
+    } finally {
+      setProcessing(false)
     }
   }
 
@@ -72,6 +89,10 @@ export default function AuctionDetail() {
     } finally {
       setProcessing(false)
     }
+  }
+
+  const getPlantInfo = (plantId: number) => {
+    return plants.find(p => p.plant_id === plantId)
   }
 
   const getChartOption = () => {
@@ -247,6 +268,25 @@ export default function AuctionDetail() {
         </div>
 
         {/* Action Buttons */}
+        {auction.status === 'draft' && (
+          <div className="pt-6 border-t border-gray-100">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleOpen}
+                disabled={processing || lots.length === 0}
+                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {processing ? 'Processing...' : 'Open Auction'}
+              </button>
+              <p className="text-14 text-gray-500">
+                {lots.length === 0
+                  ? 'Add at least one lot before opening the auction'
+                  : 'Start the bidding window and allow participants to submit bids'}
+              </p>
+            </div>
+          </div>
+        )}
+
         {auction.status === 'open' && (
           <div className="pt-6 border-t border-gray-100">
             <div className="flex items-center gap-4">
@@ -307,48 +347,132 @@ export default function AuctionDetail() {
         )}
       </div>
 
+      {/* Quick Actions */}
+      {(auction.status === 'draft' || auction.status === 'open') && (
+        <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200 p-6 mb-6">
+          <h3 className="text-18 font-semibold mb-3">Quick Actions</h3>
+          <div className="flex flex-wrap gap-3">
+            {auction.status === 'draft' && (
+              <Link
+                href={`/lots/create?auction_id=${auctionId}`}
+                className="px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors text-14 flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Add Lot to Auction
+              </Link>
+            )}
+            {auction.status === 'open' && (
+              <Link
+                href={`/bids/create?auction_id=${auctionId}`}
+                className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-14 flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Submit Bid
+              </Link>
+            )}
+            <Link
+              href="/"
+              className="px-5 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors text-14 flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              Back to Dashboard
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* Lots and Bids Grid */}
       <div className="grid grid-cols-2 gap-6 mb-6">
         {/* Lots Section */}
         <div className="bg-white rounded-lg border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="text-18 font-semibold">Lots ({lots.length})</h2>
+            <div className="flex justify-between items-center">
+              <h2 className="text-18 font-semibold">Lots ({lots.length})</h2>
+              {auction.status === 'draft' && (
+                <Link
+                  href={`/lots/create?auction_id=${auctionId}`}
+                  className="text-14 text-green-600 hover:text-green-700 font-medium"
+                >
+                  + Add Lot
+                </Link>
+              )}
+            </div>
           </div>
           <div className="p-6">
             {lots.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
-                No lots available
+              <div className="text-center py-8">
+                <svg className="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                </svg>
+                <p className="text-gray-500 font-medium mb-2">No lots yet</p>
+                {auction.status === 'draft' && (
+                  <Link
+                    href={`/lots/create?auction_id=${auctionId}`}
+                    className="inline-block text-14 text-green-600 hover:underline"
+                  >
+                    Add the first lot
+                  </Link>
+                )}
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-14">
-                  <thead className="bg-gray-50 border-b text-12 text-gray-600 uppercase tracking-wide">
-                    <tr>
-                      <th className="px-3 py-2 text-left font-medium">ID</th>
-                      <th className="px-3 py-2 text-right font-medium">Min (MWh)</th>
-                      <th className="px-3 py-2 text-right font-medium">Max (MWh)</th>
-                      <th className="px-3 py-2 text-right font-medium">Reserve (¥/kWh)</th>
-                      <th className="px-3 py-2 text-center font-medium">Partial</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {lots.map((lot) => (
-                      <tr key={lot.lot_id} className="hover:bg-gray-50">
-                        <td className="px-3 py-3 font-mono">#{lot.lot_id}</td>
-                        <td className="px-3 py-3 text-right">{lot.min_vol_mwh.toFixed(1)}</td>
-                        <td className="px-3 py-3 text-right">{lot.max_vol_mwh.toFixed(1)}</td>
-                        <td className="px-3 py-3 text-right font-medium">¥{lot.reserve_price.toFixed(2)}</td>
-                        <td className="px-3 py-3 text-center">
-                          {lot.allow_partial ? (
-                            <span className="text-green-600">✓</span>
-                          ) : (
-                            <span className="text-gray-400">✗</span>
+              <div className="space-y-3">
+                {lots.map((lot) => {
+                  const plant = getPlantInfo(lot.plant_id)
+                  return (
+                    <div key={lot.lot_id} className="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <div className="text-12 text-gray-500 mb-1">Lot #{lot.lot_id}</div>
+                          {plant && (
+                            <div className="flex items-center gap-2">
+                              <span className={`px-2 py-0.5 rounded text-11 font-medium ${
+                                plant.type === 'pv' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
+                              }`}>
+                                {plant.type === 'pv' ? 'Solar PV' : 'Wind'}
+                              </span>
+                              <span className="text-13 text-gray-700">{plant.ac_mw} MW</span>
+                              {plant.prefecture && (
+                                <span className="text-13 text-gray-500">• {plant.prefecture}</span>
+                              )}
+                            </div>
                           )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                        </div>
+                        {lot.allow_partial && (
+                          <span className="px-2 py-1 bg-green-50 text-green-700 text-11 rounded font-medium">
+                            Partial OK
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-3 text-13">
+                        <div>
+                          <div className="text-gray-500 text-11 mb-0.5">Volume Range</div>
+                          <div className="font-semibold text-gray-900">
+                            {lot.min_vol_mwh.toFixed(1)} - {lot.max_vol_mwh.toFixed(1)} MWh
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-gray-500 text-11 mb-0.5">Reserve Price</div>
+                          <div className="font-semibold text-primary">
+                            ¥{lot.reserve_price.toFixed(2)}/kWh
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-gray-500 text-11 mb-0.5">Step Size</div>
+                          <div className="font-medium text-gray-700">
+                            {lot.step_mwh.toFixed(2)} MWh
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             )}
           </div>

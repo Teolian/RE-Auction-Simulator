@@ -133,6 +133,31 @@ def list_bids(auction_id: int = None, org_id: int = None, db: Session = Depends(
 
 
 # Auction operations
+@app.post("/api/auctions/{auction_id}/open")
+def open_auction(auction_id: int, db: Session = Depends(get_db)):
+    """Open auction (start bidding window)"""
+    auction = db.query(models.Auction).filter(models.Auction.auction_id == auction_id).first()
+    if not auction:
+        raise HTTPException(status_code=404, detail="Auction not found")
+    if auction.status != 'draft':
+        raise HTTPException(status_code=400, detail="Can only open draft auctions")
+
+    # Check if there are lots
+    lot_count = db.query(models.Lot).filter(models.Lot.auction_id == auction_id).count()
+    if lot_count == 0:
+        raise HTTPException(status_code=400, detail="Cannot open auction without lots")
+
+    auction.status = 'open'
+    db.commit()
+
+    return {
+        "auction_id": auction_id,
+        "status": "open",
+        "lot_count": lot_count,
+        "message": f"Auction opened with {lot_count} lots"
+    }
+
+
 @app.post("/api/auctions/{auction_id}/lock")
 def lock_auction(auction_id: int, db: Session = Depends(get_db)):
     """Lock auction (close bidding window)"""

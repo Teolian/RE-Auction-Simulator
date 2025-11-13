@@ -112,6 +112,13 @@ export const api = {
     return await handleResponse(res)
   },
 
+  openAuction: async (id: number) => {
+    const res = await fetch(`${API_BASE}/api/auctions/${id}/open`, {
+      method: 'POST',
+    })
+    return await handleResponse(res)
+  },
+
   lockAuction: async (id: number) => {
     const res = await fetch(`${API_BASE}/api/auctions/${id}/lock`, {
       method: 'POST',
