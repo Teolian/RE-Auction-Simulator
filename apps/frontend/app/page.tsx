@@ -199,9 +199,9 @@ export default function Home() {
                 <span>View clearing results & matches</span>
               </li>
             </ol>
-            <button className="w-full mt-6 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors text-14">
+            <Link href="/lots/create" className="block w-full mt-6 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors text-14 text-center">
               Add Lot
-            </button>
+            </Link>
           </div>
 
           {/* Buyer Pipeline */}

@@ -12,6 +12,16 @@ export interface Auction {
   created_at: string
 }
 
+export interface Plant {
+  plant_id: number
+  org_id: number
+  type: 'pv' | 'wind'
+  prefecture: string | null
+  ac_mw: number
+  profile_json: any
+  created_at: string
+}
+
 export interface Lot {
   lot_id: number
   auction_id: number
@@ -119,6 +129,20 @@ export const api = {
   getReport: async (id: number): Promise<Report> => {
     const res = await fetch(`${API_BASE}/api/auctions/${id}/report`, { cache: 'no-store' })
     return await handleResponse(res)
+  },
+
+  // Plants
+  getPlants: async (orgId?: number): Promise<Plant[]> => {
+    try {
+      const url = orgId
+        ? `${API_BASE}/api/plants?org_id=${orgId}`
+        : `${API_BASE}/api/plants`
+      const res = await fetch(url, { cache: 'no-store' })
+      return await handleResponse(res)
+    } catch (error) {
+      console.error('Failed to fetch plants:', error)
+      return []
+    }
   },
 
   // Lots
