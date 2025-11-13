@@ -1,4 +1,4 @@
-.PHONY: help build up down logs clean test seed restart
+.PHONY: help build up down logs clean test seed restart health fix
 
 help:
 	@echo "RE-Auction Simulator - Makefile Commands"
@@ -25,7 +25,8 @@ help:
 	@echo ""
 	@echo "Status:"
 	@echo "  make ps          - Show running containers"
-	@echo "  make health      - Check API health"
+	@echo "  make health      - Check system health"
+	@echo "  make fix         - Quick fix for common issues"
 
 # Main commands
 up:
@@ -84,7 +85,10 @@ ps:
 	docker-compose ps
 
 health:
-	@curl -s http://localhost:8000/healthz | python -m json.tool || echo "API not responding"
+	@bash check-health.sh
+
+fix:
+	@bash quick-fix.sh
 
 # First time setup
 init: build up
