@@ -23,34 +23,44 @@ repo/
   .env.example   # Environment template
 ```
 
-## Local Setup
-
-### Option 1: Docker (Recommended)
+## Quick Start
 
 **Prerequisites**: Docker and Docker Compose
 
 ```bash
-# Start all services (PostgreSQL + API + Frontend)
-docker-compose up
+# First time setup (builds and starts all services)
+make init
 
-# Or run in background
+# Or manually
 docker-compose up -d
-
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
 ```
 
-The seed script runs automatically on first start. Access:
-- Frontend: http://localhost:3000
-- API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+Wait 10-15 seconds for services to start. Access:
+- **Frontend**: http://localhost:3000
+- **API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
 
-**Development mode** (with hot-reload for API):
+**Useful commands:**
 ```bash
-docker-compose -f docker-compose.dev.yml up
+make help      # Show all available commands
+make up        # Start services
+make down      # Stop services
+make logs      # View logs
+make test      # Run tests
+make clean     # Clean everything
+```
+
+See [QUICKSTART.md](QUICKSTART.md) for detailed instructions.
+
+## Local Setup
+
+### Option 1: Docker (Recommended)
+
+See Quick Start above or [QUICKSTART.md](QUICKSTART.md).
+
+**Development mode** (with hot-reload):
+```bash
+make dev
 ```
 
 ### Option 2: Manual Setup
