@@ -231,7 +231,7 @@ export default function LotsList() {
                           <div>
                             <div className="text-gray-500 text-12 mb-1">Plant</div>
                             {plant ? (
-                              <div className="text-gray-900 font-medium">{plant.name}</div>
+                              <div className="text-gray-900 font-medium">Plant #{plant.plant_id}</div>
                             ) : (
                               <div className="text-gray-400">—</div>
                             )}
@@ -245,9 +245,9 @@ export default function LotsList() {
                             <div className="text-gray-900">¥{lot.reserve_price.toFixed(2)}/kWh</div>
                           </div>
                           <div>
-                            <div className="text-gray-500 text-12 mb-1">Location</div>
-                            {plant ? (
-                              <div className="text-gray-900 text-13">{plant.location}</div>
+                            <div className="text-gray-500 text-12 mb-1">Prefecture</div>
+                            {plant && plant.prefecture ? (
+                              <div className="text-gray-900 text-13">{plant.prefecture}</div>
                             ) : (
                               <div className="text-gray-400">—</div>
                             )}
@@ -256,7 +256,7 @@ export default function LotsList() {
 
                         {plant && (
                           <div className="mt-3 text-13 text-gray-600">
-                            Capacity: {plant.capacity_mw.toFixed(1)} MW
+                            Capacity: {plant.ac_mw.toFixed(1)} MW
                           </div>
                         )}
                       </div>
