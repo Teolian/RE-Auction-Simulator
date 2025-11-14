@@ -45,5 +45,21 @@ services:
         uvicorn main:app --host 0.0.0.0 --port 8000 --reload
       "
 
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.dev
+    container_name: re_auction_frontend_dev
+    environment:
+      NEXT_PUBLIC_API_BASE: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules
+      - /app/.next
+
 volumes:
   postgres_data:
