@@ -105,7 +105,7 @@ export default function LotsList() {
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="text-12 text-gray-500 mb-1 uppercase tracking-wide">Total Volume</div>
             <div className="text-28 font-bold text-green-600">
-              {lots.reduce((sum, lot) => sum + lot.volume_mwh, 0).toFixed(0)}
+              {lots.reduce((sum, lot) => sum + lot.max_vol_mwh, 0).toFixed(0)}
               <span className="text-16 ml-1 text-gray-500">MWh</span>
             </div>
           </div>
@@ -238,11 +238,11 @@ export default function LotsList() {
                           </div>
                           <div>
                             <div className="text-gray-500 text-12 mb-1">Volume</div>
-                            <div className="font-semibold text-green-600">{lot.volume_mwh.toFixed(0)} MWh</div>
+                            <div className="font-semibold text-green-600">{lot.min_vol_mwh.toFixed(0)} - {lot.max_vol_mwh.toFixed(0)} MWh</div>
                           </div>
                           <div>
                             <div className="text-gray-500 text-12 mb-1">Reserve Price</div>
-                            <div className="text-gray-900">¥{lot.reserve_price_yen_kwh.toFixed(2)}/kWh</div>
+                            <div className="text-gray-900">¥{lot.reserve_price.toFixed(2)}/kWh</div>
                           </div>
                           <div>
                             <div className="text-gray-500 text-12 mb-1">Location</div>
