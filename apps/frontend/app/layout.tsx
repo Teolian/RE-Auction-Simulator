@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="min-h-screen bg-gray-50">
           <Navigation />
-          <main className="container mx-auto px-8 py-8">
+          <main className="max-w-[1400px] mx-auto px-8 py-8">
             {children}
           </main>
         </div>

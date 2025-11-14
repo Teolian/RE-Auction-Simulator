@@ -80,7 +80,7 @@ export default function Home() {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto">
+    <>
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 p-8 mb-8">
         <div className="max-w-3xl">
@@ -449,6 +449,6 @@ export default function Home() {
           )}
         </div>
       </div>
-    </div>
+    </>
   )
 }

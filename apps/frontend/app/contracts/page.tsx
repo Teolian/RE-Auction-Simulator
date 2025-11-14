@@ -96,7 +96,7 @@ export default function ContractsList() {
   }
 
   return (
-    <div className="max-w-[1200px] mx-auto">
+    <>
       <Breadcrumbs items={[
         { label: 'Dashboard', href: '/' },
         { label: 'Contracts' }
@@ -331,6 +331,6 @@ export default function ContractsList() {
           Back to Dashboard
         </Link>
       </div>
-    </div>
+    </>
   )
 }

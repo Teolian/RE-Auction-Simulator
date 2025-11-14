@@ -230,7 +230,7 @@ export default function AuctionDetail() {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto">
+    <>
       {/* Breadcrumbs */}
       <Breadcrumbs items={[
         { label: 'Dashboard', href: '/' },
@@ -604,6 +604,6 @@ export default function AuctionDetail() {
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }

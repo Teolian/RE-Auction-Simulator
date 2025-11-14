@@ -75,7 +75,7 @@ export default function InterviewsList() {
   }
 
   return (
-    <div className="max-w-[1200px] mx-auto">
+    <>
       <Breadcrumbs items={[
         { label: 'Dashboard', href: '/' },
         { label: 'Interviews (面談)' }
@@ -279,6 +279,6 @@ export default function InterviewsList() {
           Back to Dashboard
         </Link>
       </div>
-    </div>
+    </>
   )
 }
