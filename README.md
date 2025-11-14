@@ -63,36 +63,75 @@ See Quick Start above or [QUICKSTART.md](QUICKSTART.md).
 make dev
 ```
 
-### Option 2: Manual Setup
+### Option 2: Local Development (Without Docker)
 
 **Prerequisites**: Python 3.11+, Node.js 18+, PostgreSQL 14+
 
-#### 1. Setup Environment
+#### Quick Start with Scripts
+
+We provide convenient scripts for local development:
+
 ```bash
-cp .env.example .env
-# Edit .env with your database credentials
+# Start all services
+./start-local.sh
+
+# Check status
+./status-local.sh
+
+# Stop all services
+./stop-local.sh
 ```
 
-#### 2. Backend
+Access:
+- **Frontend**: http://localhost:3000
+- **API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+
+**Logs:**
+- API: `tail -f /tmp/re-auction-api.log`
+- Frontend: `tail -f /tmp/re-auction-frontend.log`
+
+#### Manual Setup
+
+If you prefer manual control:
+
+##### 1. Setup Environment
+```bash
+cp .env.example .env
+# Edit .env with DATABASE_URL pointing to localhost
+```
+
+##### 2. Database
+```bash
+# Start PostgreSQL
+service postgresql start
+
+# Create user and database
+su - postgres -c "createuser re_user"
+su - postgres -c "createdb -O re_user re_auction"
+su - postgres -c "psql -c \"ALTER USER re_user WITH PASSWORD 're_password';\""
+
+# Apply migrations
+PGPASSWORD=re_password psql -h localhost -U re_user -d re_auction -f db/migrations/001_initial_schema.sql
+```
+
+##### 3. Backend
 ```bash
 cd apps/api
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
 
-# Setup database
-createdb re_auction
-# Or use the SQL migration directly:
-# psql re_auction < ../../db/migrations/001_initial_schema.sql
+# Install dependencies
+uv pip install --system -r requirements.txt
 
 # Seed sample data (2 auctions, 3 lots, 8 bids)
+export DATABASE_URL="postgresql://re_user:re_password@localhost:5432/re_auction"
 python seed.py
 
 # Run API
+export PYTHONPATH="/home/user/RE-Auction-Simulator/apps/engine:$PYTHONPATH"
 uvicorn main:app --reload --port 8000
 ```
 
-#### 3. Frontend
+##### 4. Frontend
 ```bash
 cd apps/frontend
 npm install
