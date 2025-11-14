@@ -192,7 +192,7 @@ export default function AuctionDetail() {
   }
 
   const formatDateTime = (date: string) => {
-    return formatInTimeZone(new Date(date), TOKYO_TZ, "yyyy-MM-dd HH:mm 'JST'")
+    return formatInTimeZone(new Date(date), TOKYO_TZ, 'yyyy-MM-dd HH:mm') + ' JST'
   }
 
   const getStatusBadge = (status: string) => {
