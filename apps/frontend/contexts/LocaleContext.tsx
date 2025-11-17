@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react'
 import enMessages from '@/messages/en.json'
 import jaMessages from '@/messages/ja.json'
 
@@ -22,31 +22,42 @@ const messagesMap = {
   ja: jaMessages,
 }
 
-// Get initial locale from localStorage (only runs on client)
-const getInitialLocale = (): Locale => {
-  if (typeof window === 'undefined') return 'en'
-  const saved = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null
-  return saved && (saved === 'en' || saved === 'ja') ? saved : 'en'
-}
-
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(getInitialLocale)
-  const [messages, setMessages] = useState<any>(messagesMap[getInitialLocale()])
+  // Always start with 'en' to match SSR
+  const [locale, setLocaleState] = useState<Locale>('en')
+  const [messages, setMessages] = useState<any>(messagesMap['en'])
+  const [mounted, setMounted] = useState(false)
+
+  // Load saved locale from localStorage after mount (client-side only)
+  useEffect(() => {
+    const saved = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null
+    const savedLocale = saved && (saved === 'en' || saved === 'ja') ? saved : 'en'
+
+    if (savedLocale !== locale) {
+      setLocaleState(savedLocale)
+      setMessages(messagesMap[savedLocale])
+    }
+
+    setMounted(true)
+  }, [])
 
   // Sync locale to localStorage when it changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (mounted) {
       localStorage.setItem(LOCALE_STORAGE_KEY, locale)
     }
-  }, [locale])
+  }, [locale, mounted])
 
-  const setLocale = (newLocale: Locale) => {
+  const setLocale = useCallback((newLocale: Locale) => {
     setMessages(messagesMap[newLocale])
     setLocaleState(newLocale)
-  }
+  }, [])
+
+  // Memoize context value to prevent unnecessary rerenders
+  const value = useMemo(() => ({ locale, setLocale, messages }), [locale, setLocale, messages])
 
   return (
-    <LocaleContext.Provider value={{ locale, setLocale, messages }}>
+    <LocaleContext.Provider value={value}>
       {children}
     </LocaleContext.Provider>
   )
