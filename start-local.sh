@@ -5,6 +5,10 @@
 
 set -e
 
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$SCRIPT_DIR"
+
 # Colors for output
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -44,9 +48,9 @@ echo ""
 
 # Start Backend API
 echo -e "${YELLOW}[3/5] Starting Backend API...${NC}"
-cd apps/api
+cd "$SCRIPT_DIR/apps/api"
 export DATABASE_URL="postgresql://re_user:re_password@localhost:5432/re_auction"
-export PYTHONPATH="/home/user/RE-Auction-Simulator/apps/engine:$PYTHONPATH"
+export PYTHONPATH="$SCRIPT_DIR/apps/engine:$PYTHONPATH"
 export TZ="Asia/Tokyo"
 
 # Kill existing API process if running
@@ -70,7 +74,7 @@ echo ""
 
 # Start Frontend
 echo -e "${YELLOW}[4/5] Starting Frontend...${NC}"
-cd ../frontend
+cd "$SCRIPT_DIR/apps/frontend"
 
 # Check if node_modules exists
 if [ ! -d "node_modules" ]; then
