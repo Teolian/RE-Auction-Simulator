@@ -350,25 +350,25 @@ def seed_data():
 
     # Auction 0 matches (UNIFORM_PRICE at 14.2)
     matches.extend([
-        models.Match(lot_id=lots[0].lot_id, bid_id=bids[0].bid_id, volume_mwh=150.0, price_yen_kwh=14.2),
-        models.Match(lot_id=lots[0].lot_id, bid_id=bids[1].bid_id, volume_mwh=150.0, price_yen_kwh=14.2),
-        models.Match(lot_id=lots[1].lot_id, bid_id=bids[1].bid_id, volume_mwh=50.0, price_yen_kwh=14.2),
-        models.Match(lot_id=lots[1].lot_id, bid_id=bids[2].bid_id, volume_mwh=100.0, price_yen_kwh=14.2),
+        models.Match(auction_id=auctions[0].auction_id, lot_id=lots[0].lot_id, bid_id=bids[0].bid_id, cleared_volume=150.0, cleared_price=14.2),
+        models.Match(auction_id=auctions[0].auction_id, lot_id=lots[0].lot_id, bid_id=bids[1].bid_id, cleared_volume=150.0, cleared_price=14.2),
+        models.Match(auction_id=auctions[0].auction_id, lot_id=lots[1].lot_id, bid_id=bids[1].bid_id, cleared_volume=50.0, cleared_price=14.2),
+        models.Match(auction_id=auctions[0].auction_id, lot_id=lots[1].lot_id, bid_id=bids[2].bid_id, cleared_volume=100.0, cleared_price=14.2),
     ])
 
     # Auction 1 matches (PAY_AS_BID - different prices)
     matches.extend([
-        models.Match(lot_id=lots[2].lot_id, bid_id=bids[3].bid_id, volume_mwh=120.0, price_yen_kwh=14.5),
-        models.Match(lot_id=lots[3].lot_id, bid_id=bids[3].bid_id, volume_mwh=40.0, price_yen_kwh=14.5),
-        models.Match(lot_id=lots[3].lot_id, bid_id=bids[4].bid_id, volume_mwh=110.0, price_yen_kwh=13.8),
-        models.Match(lot_id=lots[2].lot_id, bid_id=bids[5].bid_id, volume_mwh=60.0, price_yen_kwh=13.2),
+        models.Match(auction_id=auctions[1].auction_id, lot_id=lots[2].lot_id, bid_id=bids[3].bid_id, cleared_volume=120.0, cleared_price=14.5),
+        models.Match(auction_id=auctions[1].auction_id, lot_id=lots[3].lot_id, bid_id=bids[3].bid_id, cleared_volume=40.0, cleared_price=14.5),
+        models.Match(auction_id=auctions[1].auction_id, lot_id=lots[3].lot_id, bid_id=bids[4].bid_id, cleared_volume=110.0, cleared_price=13.8),
+        models.Match(auction_id=auctions[1].auction_id, lot_id=lots[2].lot_id, bid_id=bids[5].bid_id, cleared_volume=60.0, cleared_price=13.2),
     ])
 
     # Auction 2 matches (UNIFORM_PRICE at 15.1)
     matches.extend([
-        models.Match(lot_id=lots[4].lot_id, bid_id=bids[6].bid_id, volume_mwh=200.0, price_yen_kwh=15.1),
-        models.Match(lot_id=lots[4].lot_id, bid_id=bids[7].bid_id, volume_mwh=150.0, price_yen_kwh=15.1),
-        models.Match(lot_id=lots[5].lot_id, bid_id=bids[8].bid_id, volume_mwh=170.0, price_yen_kwh=15.1),
+        models.Match(auction_id=auctions[2].auction_id, lot_id=lots[4].lot_id, bid_id=bids[6].bid_id, cleared_volume=200.0, cleared_price=15.1),
+        models.Match(auction_id=auctions[2].auction_id, lot_id=lots[4].lot_id, bid_id=bids[7].bid_id, cleared_volume=150.0, cleared_price=15.1),
+        models.Match(auction_id=auctions[2].auction_id, lot_id=lots[5].lot_id, bid_id=bids[8].bid_id, cleared_volume=170.0, cleared_price=15.1),
     ])
 
     db.add_all(matches)
