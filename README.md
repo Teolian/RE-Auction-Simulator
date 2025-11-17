@@ -20,6 +20,8 @@ repo/
     engine/      # Python clearing module
   db/
     migrations/  # SQL schema migrations
+  docs/          # Documentation
+  scripts/       # Utility scripts
   .env.example   # Environment template
 ```
 
@@ -50,13 +52,13 @@ make test      # Run tests
 make clean     # Clean everything
 ```
 
-See [QUICKSTART.md](QUICKSTART.md) for detailed instructions.
+See [QUICKSTART.md](docs/QUICKSTART.md) for detailed instructions.
 
 ## Local Setup
 
 ### Option 1: Docker (Recommended)
 
-See Quick Start above or [QUICKSTART.md](QUICKSTART.md).
+See Quick Start above or [QUICKSTART.md](docs/QUICKSTART.md).
 
 **Development mode** (with hot-reload):
 ```bash
@@ -73,13 +75,13 @@ We provide convenient scripts for local development:
 
 ```bash
 # Start all services
-./start-local.sh
+./scripts/start-local.sh
 
 # Check status
-./status-local.sh
+./scripts/status-local.sh
 
 # Stop all services
-./stop-local.sh
+./scripts/stop-local.sh
 ```
 
 Access:
@@ -190,7 +192,7 @@ The seeded data includes 2 auctions ready for demo:
 
 ## Troubleshooting
 
-If you encounter issues, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for detailed solutions.
+If you encounter issues, see [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for detailed solutions.
 
 Quick fixes:
 - Frontend error: Wait 15s for services to start, then refresh
