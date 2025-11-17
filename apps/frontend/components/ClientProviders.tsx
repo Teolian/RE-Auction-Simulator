@@ -7,13 +7,15 @@ import { NextIntlClientProvider } from 'next-intl'
 
 export default function ClientProviders({
   children,
-  messages
+  messages,
+  locale
 }: {
   children: ReactNode
   messages: any
+  locale: string
 }) {
   return (
-    <NextIntlClientProvider messages={messages}>
+    <NextIntlClientProvider messages={messages} locale={locale}>
       <OrgProvider>
         <RoleProvider>
           {children}
