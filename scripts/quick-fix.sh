@@ -38,7 +38,7 @@ docker exec re_auction_api python seed.py 2>/dev/null || echo "Seed script will 
 
 echo ""
 echo "Step 8: Checking health..."
-bash check-health.sh
+bash scripts/check-health.sh
 
 echo ""
 echo "=== Fix Complete ==="

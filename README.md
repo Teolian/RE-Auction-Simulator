@@ -13,14 +13,19 @@ Professional B2B auction platform for PV/wind generation with transparent cleari
 
 ## Project Structure
 ```
-repo/
-  apps/
-    frontend/    # Next.js + TypeScript + shadcn/ui
-    api/         # FastAPI + SQLAlchemy + Alembic
-    engine/      # Python clearing module
-  db/
-    migrations/  # SQL schema migrations
-  .env.example   # Environment template
+RE-Auction-Simulator/
+├── apps/
+│   ├── frontend/    # Next.js + TypeScript + shadcn/ui
+│   ├── api/         # FastAPI + SQLAlchemy + Alembic
+│   └── engine/      # Python clearing module
+├── db/
+│   └── migrations/  # SQL schema migrations
+├── docs/            # Documentation (project specs, guides)
+├── scripts/         # Utility scripts (local dev, health checks)
+├── .github/         # CI/CD workflows
+├── .env.example     # Environment template
+├── Makefile         # Development commands
+└── docker-compose.yml
 ```
 
 ## Quick Start
@@ -73,13 +78,13 @@ We provide convenient scripts for local development:
 
 ```bash
 # Start all services
-./start-local.sh
+./scripts/start-local.sh
 
 # Check status
-./status-local.sh
+./scripts/status-local.sh
 
 # Stop all services
-./stop-local.sh
+./scripts/stop-local.sh
 ```
 
 Access:

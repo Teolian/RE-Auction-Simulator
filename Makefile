@@ -85,10 +85,10 @@ ps:
 	docker-compose ps
 
 health:
-	@bash check-health.sh
+	@bash scripts/check-health.sh
 
 fix:
-	@bash quick-fix.sh
+	@bash scripts/quick-fix.sh
 
 # First time setup
 init: build up

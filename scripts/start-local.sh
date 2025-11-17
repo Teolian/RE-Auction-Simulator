@@ -5,8 +5,8 @@
 
 set -e
 
-# Get the directory where this script is located
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Get the project root directory (parent of the scripts folder)
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 cd "$SCRIPT_DIR"
 
 # Colors for output
@@ -117,5 +117,5 @@ echo -e "  API:       tail -f /tmp/re-auction-api.log"
 echo -e "  Frontend:  tail -f /tmp/re-auction-frontend.log"
 echo ""
 echo -e "${BLUE}To stop:${NC}"
-echo -e "  ./stop-local.sh"
+echo -e "  ./scripts/stop-local.sh"
 echo ""
