@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClientProviders messages={{}} locale="en">
+        <ClientProviders>
           <div className="min-h-screen bg-gray-50">
             <Navigation />
             <main className="max-w-[1400px] mx-auto px-8 py-8">

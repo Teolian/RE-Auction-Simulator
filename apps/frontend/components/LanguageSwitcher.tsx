@@ -1,36 +1,22 @@
 'use client'
 
-import { useLocale } from 'next-intl'
-import { usePathname, useRouter } from 'next/navigation'
-import { useState, useTransition } from 'react'
+import { useLocale as useLocaleContext, Locale } from '@/contexts/LocaleContext'
+import { useState } from 'react'
 
 export default function LanguageSwitcher() {
-  const locale = useLocale()
-  const router = useRouter()
-  const pathname = usePathname()
-  const [isPending, startTransition] = useTransition()
+  const { locale, setLocale } = useLocaleContext()
   const [isOpen, setIsOpen] = useState(false)
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'ja', name: '日本語', flag: '🇯🇵' }
+    { code: 'en' as Locale, name: 'English', flag: '🇺🇸' },
+    { code: 'ja' as Locale, name: '日本語', flag: '🇯🇵' }
   ]
 
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0]
 
-  const switchLanguage = (newLocale: string) => {
+  const switchLanguage = (newLocale: Locale) => {
     setIsOpen(false)
-    startTransition(() => {
-      // Remove current locale from pathname if it exists
-      const pathnameWithoutLocale = pathname.replace(/^\/(en|ja)/, '') || '/'
-
-      // Add new locale to pathname if it's not the default
-      const newPathname = newLocale === 'en'
-        ? pathnameWithoutLocale
-        : `/${newLocale}${pathnameWithoutLocale}`
-
-      router.replace(newPathname)
-    })
+    setLocale(newLocale)
   }
 
   return (
@@ -38,7 +24,6 @@ export default function LanguageSwitcher() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors text-14 font-medium"
-        disabled={isPending}
       >
         <span className="text-16">{currentLanguage.flag}</span>
         <span>{currentLanguage.code.toUpperCase()}</span>

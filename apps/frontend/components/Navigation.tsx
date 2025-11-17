@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useRole, roleConfig, UserRole } from '@/contexts/RoleContext'
 import OrgSelector from './OrgSelector'
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Navigation() {
   const pathname = usePathname()
@@ -87,10 +88,13 @@ export default function Navigation() {
             ))}
           </div>
 
-          {/* Org Selector & Role Switcher */}
+          {/* Org Selector & Language & Role Switcher */}
           <div className="flex items-center gap-2 flex-shrink-0">
             {/* Org Selector */}
             <OrgSelector />
+
+            {/* Language Switcher */}
+            <LanguageSwitcher />
 
             {/* Role Switcher */}
             <div className="flex items-center gap-0.5 bg-gray-100 rounded-lg p-0.5">
