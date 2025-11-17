@@ -22,31 +22,28 @@ const messagesMap = {
   ja: jaMessages,
 }
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  // Always start with 'en' to match SSR
-  const [locale, setLocaleState] = useState<Locale>('en')
-  const [messages, setMessages] = useState<any>(messagesMap['en'])
-  const [mounted, setMounted] = useState(false)
-
-  // Load saved locale from localStorage after mount (client-side only)
-  useEffect(() => {
+// Get locale from localStorage synchronously on client, 'en' on server
+function getInitialLocale(): Locale {
+  if (typeof window === 'undefined') return 'en'
+  try {
     const saved = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null
-    const savedLocale = saved && (saved === 'en' || saved === 'ja') ? saved : 'en'
+    return saved && (saved === 'en' || saved === 'ja') ? saved : 'en'
+  } catch {
+    return 'en'
+  }
+}
 
-    if (savedLocale !== locale) {
-      setLocaleState(savedLocale)
-      setMessages(messagesMap[savedLocale])
-    }
-
-    setMounted(true)
-  }, [])
+export function LocaleProvider({ children }: { children: ReactNode }) {
+  // Initialize with lazy function - reads localStorage immediately on client
+  const [locale, setLocaleState] = useState<Locale>(getInitialLocale)
+  const [messages, setMessages] = useState<any>(() => messagesMap[getInitialLocale()])
 
   // Sync locale to localStorage when it changes
   useEffect(() => {
-    if (mounted) {
+    if (typeof window !== 'undefined') {
       localStorage.setItem(LOCALE_STORAGE_KEY, locale)
     }
-  }, [locale, mounted])
+  }, [locale])
 
   const setLocale = useCallback((newLocale: Locale) => {
     setMessages(messagesMap[newLocale])
