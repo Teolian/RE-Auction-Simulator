@@ -65,9 +65,16 @@
   },
   "marketOverview": {
     "title": "Market Overview",
+    "subtitle": "Current market conditions and recent activity",
+    "unableToLoad": "Unable to load market statistics",
     "activeRegions": "Active Regions",
+    "noActiveRegions": "No active regions",
     "avgPrice": "Avg Cleared Price",
-    "totalVolume": "Total Volume Traded",
+    "noDataYet": "No data yet",
+    "totalVolume": "Total Volume",
+    "totalVolumeTraded": "Total Volume Traded",
+    "noVolumeYet": "No volume yet",
+    "lastNAuctions": "Last 5 auctions",
     "recentClearings": "Recent Clearings",
     "last30Days": "Last 30 days"
   },

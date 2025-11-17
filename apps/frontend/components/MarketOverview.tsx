@@ -1,8 +1,10 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useMarketStats } from '@/lib/hooks'
 
 export default function MarketOverview() {
+  const t = useTranslations()
   const { data: stats, loading, error } = useMarketStats()
 
   if (loading) {
@@ -23,7 +25,7 @@ export default function MarketOverview() {
   if (error || !stats) {
     return (
       <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="text-14 text-gray-500">Unable to load market statistics</div>
+        <div className="text-14 text-gray-500">{t('marketOverview.unableToLoad')}</div>
       </div>
     )
   }
@@ -31,15 +33,15 @@ export default function MarketOverview() {
   return (
     <div className="bg-white rounded-lg border border-gray-200">
       <div className="px-6 py-4 border-b border-gray-100">
-        <h2 className="text-18 font-semibold text-gray-900">Market Overview</h2>
-        <p className="text-14 text-gray-600 mt-0.5">Current market conditions and recent activity</p>
+        <h2 className="text-18 font-semibold text-gray-900">{t('marketOverview.title')}</h2>
+        <p className="text-14 text-gray-600 mt-0.5">{t('marketOverview.subtitle')}</p>
       </div>
 
       <div className="p-6">
         <div className="grid grid-cols-3 gap-6 mb-6">
           {/* Active Regions */}
           <div>
-            <div className="text-12 text-gray-500 mb-2 uppercase tracking-wide font-semibold">Active Regions</div>
+            <div className="text-12 text-gray-500 mb-2 uppercase tracking-wide font-semibold">{t('marketOverview.activeRegions')}</div>
             {stats.active_regions && stats.active_regions.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {stats.active_regions.map((region: string) => (
@@ -52,43 +54,43 @@ export default function MarketOverview() {
                 ))}
               </div>
             ) : (
-              <div className="text-14 text-gray-400">No active regions</div>
+              <div className="text-14 text-gray-400">{t('marketOverview.noActiveRegions')}</div>
             )}
           </div>
 
           {/* Average Cleared Price */}
           <div>
-            <div className="text-12 text-gray-500 mb-2 uppercase tracking-wide font-semibold">Avg Cleared Price</div>
+            <div className="text-12 text-gray-500 mb-2 uppercase tracking-wide font-semibold">{t('marketOverview.avgPrice')}</div>
             {stats.avg_cleared_price !== null ? (
               <div className="text-28 font-bold text-gray-900">
                 ¥{stats.avg_cleared_price.toFixed(2)}
                 <span className="text-16 text-gray-500 font-normal ml-1">/kWh</span>
               </div>
             ) : (
-              <div className="text-14 text-gray-400">No data yet</div>
+              <div className="text-14 text-gray-400">{t('marketOverview.noDataYet')}</div>
             )}
-            <div className="text-12 text-gray-500 mt-1">Last 5 auctions</div>
+            <div className="text-12 text-gray-500 mt-1">{t('marketOverview.lastNAuctions')}</div>
           </div>
 
           {/* Total Volume Traded */}
           <div>
-            <div className="text-12 text-gray-500 mb-2 uppercase tracking-wide font-semibold">Total Volume</div>
+            <div className="text-12 text-gray-500 mb-2 uppercase tracking-wide font-semibold">{t('marketOverview.totalVolume')}</div>
             {stats.total_volume_traded > 0 ? (
               <div className="text-28 font-bold text-gray-900">
                 {stats.total_volume_traded.toFixed(0)}
                 <span className="text-16 text-gray-500 font-normal ml-1">MWh</span>
               </div>
             ) : (
-              <div className="text-14 text-gray-400">No volume yet</div>
+              <div className="text-14 text-gray-400">{t('marketOverview.noVolumeYet')}</div>
             )}
-            <div className="text-12 text-gray-500 mt-1">Last 5 auctions</div>
+            <div className="text-12 text-gray-500 mt-1">{t('marketOverview.lastNAuctions')}</div>
           </div>
         </div>
 
         {/* Recent Clearings */}
         {stats.recent_clearings && stats.recent_clearings.length > 0 && (
           <div>
-            <div className="text-12 text-gray-500 mb-3 uppercase tracking-wide font-semibold">Recent Clearings</div>
+            <div className="text-12 text-gray-500 mb-3 uppercase tracking-wide font-semibold">{t('marketOverview.recentClearings')}</div>
             <div className="space-y-2">
               {stats.recent_clearings.map((clearing: any) => (
                 <div

@@ -65,9 +65,16 @@
   },
   "marketOverview": {
     "title": "市場概要",
+    "subtitle": "現在の市場状況と最近の活動",
+    "unableToLoad": "市場統計を読み込めません",
     "activeRegions": "アクティブな地域",
+    "noActiveRegions": "アクティブな地域がありません",
     "avgPrice": "平均クリア価格",
+    "noDataYet": "データなし",
     "totalVolume": "総取引量",
+    "totalVolumeTraded": "総取引量",
+    "noVolumeYet": "取引量なし",
+    "lastNAuctions": "過去5オークション",
     "recentClearings": "最近のクリアリング",
     "last30Days": "過去30日間"
   },
