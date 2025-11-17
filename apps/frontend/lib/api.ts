@@ -156,6 +156,13 @@ export const api = {
     return await handleResponse(res)
   },
 
+  deleteAuction: async (id: number): Promise<{ message: string; auction_id: number }> => {
+    const res = await fetch(`${API_BASE}/api/auctions/${id}`, {
+      method: 'DELETE',
+    })
+    return await handleResponse(res)
+  },
+
   // Plants
   getPlants: async (orgId?: number): Promise<Plant[]> => {
     try {

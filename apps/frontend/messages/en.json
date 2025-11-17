@@ -107,6 +107,7 @@
     "backToAuctions": "← Back to Auctions",
     "period": "Period",
     "openAuction": "Open Auction",
+    "deleteAuction": "Delete Auction",
     "processing": "Processing...",
     "addLotFirst": "Add at least one lot before opening the auction",
     "startBiddingWindow": "Start the bidding window and allow participants to submit bids",

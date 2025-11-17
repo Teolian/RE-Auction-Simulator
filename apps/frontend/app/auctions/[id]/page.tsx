@@ -94,6 +94,20 @@ export default function AuctionDetail() {
     }
   }
 
+  const handleDelete = async () => {
+    if (!confirm('Delete this auction?\n\nThis action cannot be undone. Only draft auctions without lots or bids can be deleted.')) return
+    setProcessing(true)
+    try {
+      await api.deleteAuction(auctionId)
+      alert('Auction deleted successfully')
+      // Redirect to auctions list
+      window.location.href = '/auctions'
+    } catch (error) {
+      alert('Failed to delete auction: ' + (error as Error).message)
+      setProcessing(false)
+    }
+  }
+
   const getPlantInfo = (plantId: number) => {
     return plants.find(p => p.plant_id === plantId)
   }
@@ -273,19 +287,32 @@ export default function AuctionDetail() {
         {/* Action Buttons */}
         {auction.status === 'draft' && (
           <div className="pt-6 border-t border-gray-100">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handleOpen}
+                  disabled={processing || lots.length === 0}
+                  className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {processing ? t('auctionDetail.processing') : t('auctionDetail.openAuction')}
+                </button>
+                <p className="text-14 text-gray-500">
+                  {lots.length === 0
+                    ? t('auctionDetail.addLotFirst')
+                    : t('auctionDetail.startBiddingWindow')}
+                </p>
+              </div>
               <button
-                onClick={handleOpen}
-                disabled={processing || lots.length === 0}
-                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleDelete}
+                disabled={processing}
+                className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                title="Delete auction (only draft auctions can be deleted)"
               >
-                {processing ? t('auctionDetail.processing') : t('auctionDetail.openAuction')}
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                {t('auctionDetail.deleteAuction')}
               </button>
-              <p className="text-14 text-gray-500">
-                {lots.length === 0
-                  ? t('auctionDetail.addLotFirst')
-                  : t('auctionDetail.startBiddingWindow')}
-              </p>
             </div>
           </div>
         )}

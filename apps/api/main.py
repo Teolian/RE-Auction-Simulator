@@ -181,6 +181,43 @@ def get_auction(auction_id: int, db: Session = Depends(get_db)):
     return auction
 
 
+@app.delete("/api/auctions/{auction_id}")
+def delete_auction(auction_id: int, db: Session = Depends(get_db)):
+    """Delete auction (only if status is 'draft' and no lots/bids exist)"""
+    auction = db.query(models.Auction).filter(models.Auction.auction_id == auction_id).first()
+    if not auction:
+        raise HTTPException(status_code=404, detail="Auction not found")
+
+    # Only allow deletion of draft auctions
+    if auction.status != 'draft':
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot delete auction with status '{auction.status}'. Only 'draft' auctions can be deleted."
+        )
+
+    # Check if any lots exist
+    lots_count = db.query(models.Lot).filter(models.Lot.auction_id == auction_id).count()
+    if lots_count > 0:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot delete auction with {lots_count} lot(s). Remove all lots first."
+        )
+
+    # Check if any bids exist
+    bids_count = db.query(models.Bid).filter(models.Bid.auction_id == auction_id).count()
+    if bids_count > 0:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot delete auction with {bids_count} bid(s). Remove all bids first."
+        )
+
+    # Safe to delete
+    db.delete(auction)
+    db.commit()
+
+    return {"message": "Auction deleted successfully", "auction_id": auction_id}
+
+
 # Lots
 @app.post("/api/lots", response_model=LotResponse)
 def create_lot(lot: LotCreate, db: Session = Depends(get_db)):

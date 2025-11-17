@@ -107,6 +107,7 @@
     "backToAuctions": "← オークションに戻る",
     "period": "期間",
     "openAuction": "オークション公開",
+    "deleteAuction": "オークション削除",
     "processing": "処理中...",
     "addLotFirst": "オークションを公開する前に、少なくとも1つのロットを追加してください",
     "startBiddingWindow": "入札ウィンドウを開始し、参加者が入札を提出できるようにします",
