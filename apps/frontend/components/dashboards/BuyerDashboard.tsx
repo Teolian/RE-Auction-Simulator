@@ -82,58 +82,83 @@ export default function BuyerDashboard({ auctions }: BuyerDashboardProps) {
               <p className="text-14 text-gray-400">Check back later for new bidding opportunities</p>
             </div>
           ) : (
-            openAuctions.map((auction) => (
-              <div key={auction.auction_id} className="p-5 hover:bg-gray-50 transition-colors">
-                <div className="flex items-start justify-between gap-6">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
+            openAuctions.map((auction, index) => {
+              const isFirst = index === 0
+              return (
+                <div
+                  key={auction.auction_id}
+                  className={`p-5 transition-all ${
+                    isFirst
+                      ? 'bg-blue-50/50 border-l-4 border-l-blue-500 hover:bg-blue-50'
+                      : 'hover:bg-gray-50'
+                  }`}
+                >
+                  {isFirst && (
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-600 text-white rounded-full text-12 font-bold animate-pulse">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
+                        </svg>
+                        DEMO: Next Step
+                      </span>
+                      <span className="text-13 text-blue-700 font-medium">⚡ Submit competitive bids to win energy</span>
+                    </div>
+                  )}
+                  <div className="flex items-start justify-between gap-6">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-3">
+                        <Link
+                          href={`/auctions/${auction.auction_id}`}
+                          className="text-18 font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+                        >
+                          {auction.area} Auction
+                        </Link>
+                        <span className="px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-lg text-12 font-semibold uppercase">
+                          OPEN
+                        </span>
+                        <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-12 font-mono">
+                          {auction.mode.replace('_', ' ').toUpperCase()}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-4 text-14">
+                        <div>
+                          <div className="text-gray-500 text-12 mb-0.5">Auction ID</div>
+                          <div className="font-mono text-gray-900">#{auction.auction_id}</div>
+                        </div>
+                        <div>
+                          <div className="text-gray-500 text-12 mb-0.5">Bidding Opens</div>
+                          <div className="text-gray-900">{formatDateTime(auction.starts_at).split(' ')[0]}</div>
+                        </div>
+                        <div>
+                          <div className="text-gray-500 text-12 mb-0.5">Bidding Closes</div>
+                          <div className="text-red-600 font-semibold">{formatDateTime(auction.ends_at).split(' ')[0]}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
                       <Link
                         href={`/auctions/${auction.auction_id}`}
-                        className="text-18 font-semibold text-gray-900 hover:text-blue-600 transition-colors"
+                        className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg font-medium text-14 transition-colors"
                       >
-                        {auction.area} Auction
+                        View Lots
                       </Link>
-                      <span className="px-3 py-1 bg-green-50 text-green-700 border border-green-200 rounded-lg text-12 font-semibold uppercase">
-                        OPEN
-                      </span>
-                      <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-12 font-mono">
-                        {auction.mode.replace('_', ' ').toUpperCase()}
-                      </span>
+                      <Link
+                        href="/bids/create"
+                        className={`px-5 py-2.5 rounded-lg font-semibold text-14 transition-all ${
+                          isFirst
+                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/30 scale-105'
+                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                        }`}
+                      >
+                        {isFirst ? '⚡ Submit Bid Now' : 'Submit Bid'}
+                      </Link>
                     </div>
-
-                    <div className="grid grid-cols-3 gap-4 text-14">
-                      <div>
-                        <div className="text-gray-500 text-12 mb-0.5">Auction ID</div>
-                        <div className="font-mono text-gray-900">#{auction.auction_id}</div>
-                      </div>
-                      <div>
-                        <div className="text-gray-500 text-12 mb-0.5">Bidding Opens</div>
-                        <div className="text-gray-900">{formatDateTime(auction.starts_at).split(' ')[0]}</div>
-                      </div>
-                      <div>
-                        <div className="text-gray-500 text-12 mb-0.5">Bidding Closes</div>
-                        <div className="text-red-600 font-semibold">{formatDateTime(auction.ends_at).split(' ')[0]}</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/auctions/${auction.auction_id}`}
-                      className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg font-medium text-14 transition-colors"
-                    >
-                      View Lots
-                    </Link>
-                    <Link
-                      href="/bids/create"
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold text-14 transition-colors"
-                    >
-                      Submit Bid
-                    </Link>
                   </div>
                 </div>
-              </div>
-            ))
+              )
+            })
           )}
         </div>
       </div>
