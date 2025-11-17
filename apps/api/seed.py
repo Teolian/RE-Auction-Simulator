@@ -54,7 +54,7 @@ def seed_data():
     users = []
     for org in all_orgs:
         email_domain = org.name.lower().replace(" ", "-").replace(".", "").replace(",", "")[:20]
-        role = org.type.upper()
+        role = org.type.lower()  # enum values are lowercase: seller, buyer, operator
         users.append(models.User(
             org_id=org.org_id,
             email=f"user@{email_domain}.jp",
