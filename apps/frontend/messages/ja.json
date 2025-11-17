@@ -1,0 +1,121 @@
+{
+  "navigation": {
+    "dashboard": "ダッシュボード",
+    "auctions": "オークション",
+    "tradingPlatform": "取引プラットフォーム",
+    "selectOrganization": "組織を選択"
+  },
+  "roles": {
+    "seller": "売り手",
+    "buyer": "買い手",
+    "operator": "運営者"
+  },
+  "dashboard": {
+    "seller": {
+      "title": "売り手ダッシュボード",
+      "subtitle": "エネルギーロットを管理し、販売を追跡",
+      "addLot": "ロット追加",
+      "openAuctions": "公開中のオークション",
+      "openAuctionsDesc": "アクティブなオークションにロットを提出",
+      "myActiveLots": "アクティブなロット",
+      "myActiveLotsDesc": "進行中のオークションのロットを追跡",
+      "recentResults": "最近の結果",
+      "recentResultsDesc": "クリアされたオークションからの販売を表示",
+      "noOpenAuctions": "公開中のオークションがありません",
+      "noOpenAuctionsDesc": "新しいオークションの機会をお待ちください",
+      "noActiveLots": "アクティブなロットがありません",
+      "noActiveLotsDesc": "取引を開始するには、公開オークションにロットを追加してください"
+    },
+    "buyer": {
+      "title": "買い手ダッシュボード",
+      "subtitle": "オークションを閲覧し、封印入札を提出",
+      "submitBid": "入札する",
+      "availableLots": "利用可能なロット",
+      "availableLotsDesc": "オークション終了前に封印入札を提出",
+      "myActiveBids": "アクティブな入札",
+      "myActiveBidsDesc": "進行中のオークションの入札を追跡",
+      "myAwards": "落札結果",
+      "myAwardsDesc": "クリアされたオークションで獲得したエネルギー",
+      "noAuctions": "ロットのあるオークションがありません",
+      "noAuctionsDesc": "新しい入札機会をお待ちください"
+    },
+    "operator": {
+      "title": "オークション運営",
+      "subtitle": "プラットフォームオークションを管理し、クリアリングを実行",
+      "createAuction": "新規オークション作成",
+      "systemHealth": "システム状態",
+      "totalAuctions": "総オークション数",
+      "open": "公開中",
+      "locked": "ロック済み",
+      "cleared": "クリア済み",
+      "actionQueue": "アクションキュー",
+      "actionQueueDesc": "対応が必要なオークション",
+      "pending": "保留中",
+      "allAuctions": "全オークション",
+      "allAuctionsDesc": "完全なオークションパイプライン",
+      "noAuctions": "オークションが見つかりません",
+      "noAuctionsDesc": "最初のオークションを作成してください",
+      "acceptingBids": "入札受付中",
+      "readyForClearing": "クリアリング準備完了",
+      "resultsPublished": "結果公開済み"
+    }
+  },
+  "marketOverview": {
+    "title": "市場概要",
+    "activeRegions": "アクティブな地域",
+    "avgPrice": "平均クリア価格",
+    "totalVolume": "総取引量",
+    "recentClearings": "最近のクリアリング",
+    "last30Days": "過去30日間"
+  },
+  "auction": {
+    "id": "オークションID",
+    "area": "地域",
+    "mode": "モード",
+    "status": "ステータス",
+    "lots": "ロット",
+    "bids": "入札",
+    "closes": "締切",
+    "priceRange": "価格帯",
+    "viewLots": "ロットを表示",
+    "viewDetails": "詳細を表示",
+    "viewAuction": "オークションを表示",
+    "viewReport": "レポートを表示",
+    "lock": "ロック",
+    "clear": "クリア",
+    "lockAuction": "オークションをロック",
+    "runClearing": "クリアリング実行",
+    "locking": "ロック中...",
+    "running": "実行中...",
+    "auctionOpen": "オークション公開中",
+    "awaitingClearing": "クリアリング待ち",
+    "processing": "処理中"
+  },
+  "lot": {
+    "id": "ロットID",
+    "minVolume": "最小量",
+    "maxVolume": "最大量",
+    "reservePrice": "予約価格",
+    "matchedVolume": "マッチ量",
+    "clearedPrice": "クリア価格",
+    "status": "ステータス"
+  },
+  "bid": {
+    "id": "入札ID",
+    "price": "入札価格",
+    "amount": "入札額",
+    "volume": "量",
+    "wonVolume": "落札量",
+    "clearedPrice": "クリア価格",
+    "result": "結果",
+    "noAward": "落札なし"
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "selectOrg": "組織を選択してください",
+    "selectOrgDesc": "トップナビゲーションの組織セレクターを使用してください",
+    "auctions": "オークション",
+    "lotsCount": "ロット",
+    "bidsCount": "入札"
+  }
+}

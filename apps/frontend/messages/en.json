@@ -1,0 +1,121 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "auctions": "Auctions",
+    "tradingPlatform": "Trading Platform",
+    "selectOrganization": "Select Organization"
+  },
+  "roles": {
+    "seller": "Seller",
+    "buyer": "Buyer",
+    "operator": "Operator"
+  },
+  "dashboard": {
+    "seller": {
+      "title": "Seller Dashboard",
+      "subtitle": "Manage your energy lots and track sales",
+      "addLot": "Add Lot",
+      "openAuctions": "Open Auctions",
+      "openAuctionsDesc": "Submit lots to active auctions",
+      "myActiveLots": "My Active Lots",
+      "myActiveLotsDesc": "Track your lots in ongoing auctions",
+      "recentResults": "Recent Results",
+      "recentResultsDesc": "View your sales from cleared auctions",
+      "noOpenAuctions": "No open auctions available",
+      "noOpenAuctionsDesc": "Check back later for new auction opportunities",
+      "noActiveLots": "No active lots",
+      "noActiveLotsDesc": "Add lots to open auctions to start trading"
+    },
+    "buyer": {
+      "title": "Buyer Dashboard",
+      "subtitle": "Browse auctions and submit sealed bids",
+      "submitBid": "Submit Bid",
+      "availableLots": "Available Lots",
+      "availableLotsDesc": "Submit sealed bids before auction closes",
+      "myActiveBids": "My Active Bids",
+      "myActiveBidsDesc": "Track your bids in ongoing auctions",
+      "myAwards": "My Awards",
+      "myAwardsDesc": "Energy you won from cleared auctions",
+      "noAuctions": "No auctions with lots available",
+      "noAuctionsDesc": "Check back later for new bidding opportunities"
+    },
+    "operator": {
+      "title": "Auction Operations",
+      "subtitle": "Manage platform auctions and run clearing",
+      "createAuction": "Create New Auction",
+      "systemHealth": "System Health",
+      "totalAuctions": "Total Auctions",
+      "open": "Open",
+      "locked": "Locked",
+      "cleared": "Cleared",
+      "actionQueue": "Action Queue",
+      "actionQueueDesc": "Auctions requiring your attention",
+      "pending": "Pending",
+      "allAuctions": "All Auctions",
+      "allAuctionsDesc": "Complete auction pipeline",
+      "noAuctions": "No auctions found",
+      "noAuctionsDesc": "Create your first auction to get started",
+      "acceptingBids": "Accepting bids",
+      "readyForClearing": "Ready for clearing",
+      "resultsPublished": "Results published"
+    }
+  },
+  "marketOverview": {
+    "title": "Market Overview",
+    "activeRegions": "Active Regions",
+    "avgPrice": "Avg Cleared Price",
+    "totalVolume": "Total Volume Traded",
+    "recentClearings": "Recent Clearings",
+    "last30Days": "Last 30 days"
+  },
+  "auction": {
+    "id": "Auction ID",
+    "area": "Area",
+    "mode": "Mode",
+    "status": "Status",
+    "lots": "Lots",
+    "bids": "Bids",
+    "closes": "Closes",
+    "priceRange": "Price Range",
+    "viewLots": "View Lots",
+    "viewDetails": "View Details",
+    "viewAuction": "View Auction",
+    "viewReport": "View Report",
+    "lock": "Lock",
+    "clear": "Clear",
+    "lockAuction": "Lock Auction",
+    "runClearing": "Run Clearing",
+    "locking": "Locking...",
+    "running": "Running...",
+    "auctionOpen": "Auction open",
+    "awaitingClearing": "Awaiting clearing",
+    "processing": "Processing"
+  },
+  "lot": {
+    "id": "Lot ID",
+    "minVolume": "Min Volume",
+    "maxVolume": "Max Volume",
+    "reservePrice": "Reserve Price",
+    "matchedVolume": "Matched Volume",
+    "clearedPrice": "Cleared Price",
+    "status": "Status"
+  },
+  "bid": {
+    "id": "Bid ID",
+    "price": "Bid Price",
+    "amount": "Bid Amount",
+    "volume": "Volume",
+    "wonVolume": "Won Volume",
+    "clearedPrice": "Cleared Price",
+    "result": "Result",
+    "noAward": "No award"
+  },
+  "common": {
+    "loading": "Loading...",
+    "selectOrg": "Please select an organization",
+    "selectOrgDesc": "Use the organization selector in the top navigation",
+    "auctions": "Auctions",
+    "lotsCount": "lots",
+    "bidsCount": "bids"
+  }
+}
