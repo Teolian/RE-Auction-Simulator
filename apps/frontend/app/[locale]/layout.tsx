@@ -4,10 +4,15 @@ import { RoleProvider } from '@/contexts/RoleContext'
 import { OrgProvider } from '@/contexts/OrgContext'
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages} from 'next-intl/server';
+import {locales} from '@/i18n';
 
 export const metadata: Metadata = {
   title: 'RE-Auction Simulator',
   description: 'Renewable Energy Auction Platform',
+}
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({locale}));
 }
 
 export default async function LocaleLayout({
