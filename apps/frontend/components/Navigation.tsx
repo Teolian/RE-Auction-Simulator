@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useRole, roleConfig, UserRole } from '@/contexts/RoleContext'
 import OrgSelector from './OrgSelector'
 import LanguageSwitcher from './LanguageSwitcher'
@@ -9,10 +10,11 @@ import LanguageSwitcher from './LanguageSwitcher'
 export default function Navigation() {
   const pathname = usePathname()
   const { role, setRole } = useRole()
+  const t = useTranslations()
 
   const navItems = [
     {
-      name: 'Dashboard',
+      key: 'dashboard',
       href: '/',
       roles: ['operator', 'seller', 'buyer'] as UserRole[],
       icon: (
@@ -22,7 +24,7 @@ export default function Navigation() {
       ),
     },
     {
-      name: 'Auctions',
+      key: 'auctions',
       href: '/auctions',
       roles: ['operator', 'seller', 'buyer'] as UserRole[],
       icon: (
@@ -63,10 +65,10 @@ export default function Navigation() {
               <div className="flex items-center gap-1.5">
                 <div className="text-16 font-bold text-gray-900">RE Auction</div>
                 <div className={`px-1.5 py-0.5 rounded text-9 font-semibold uppercase tracking-wide ${roleConfig[role].bgColor} ${roleConfig[role].textColor}`}>
-                  {roleConfig[role].name}
+                  {t(`roles.${role}`)}
                 </div>
               </div>
-              <div className="text-10 text-gray-500 uppercase tracking-wide">Trading Platform</div>
+              <div className="text-10 text-gray-500 uppercase tracking-wide">{t('navigation.tradingPlatform')}</div>
             </div>
           </Link>
 
@@ -83,7 +85,7 @@ export default function Navigation() {
                 }`}
               >
                 {item.icon}
-                <span>{item.name}</span>
+                <span>{t(`navigation.${item.key}`)}</span>
               </Link>
             ))}
           </div>
@@ -113,7 +115,7 @@ export default function Navigation() {
                     title={config.description}
                   >
                     {config.icon}
-                    <span>{config.name}</span>
+                    <span>{t(`roles.${r}`)}</span>
                   </button>
                 )
               })}
