@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { useOrg } from '@/contexts/OrgContext'
 import { useAuctionsWithCounts, useMyLots } from '@/lib/hooks'
 import MarketOverview from '@/components/MarketOverview'
@@ -9,6 +10,7 @@ import { formatInTimeZone } from 'date-fns-tz'
 const TOKYO_TZ = 'Asia/Tokyo'
 
 export default function SellerDashboard() {
+  const t = useTranslations()
   const { org } = useOrg()
   const { data: openAuctions, loading: auctionsLoading } = useAuctionsWithCounts({ status: 'open' })
   const { data: myActiveLots, loading: lotsLoading } = useMyLots(org?.org_id || null, 'active')
@@ -22,8 +24,8 @@ export default function SellerDashboard() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="text-16 text-gray-500 mb-2">Please select an organization</div>
-          <div className="text-14 text-gray-400">Use the organization selector in the top navigation</div>
+          <div className="text-16 text-gray-500 mb-2">{t('common.selectOrg')}</div>
+          <div className="text-14 text-gray-400">{t('common.selectOrgDesc')}</div>
         </div>
       </div>
     )
@@ -34,8 +36,8 @@ export default function SellerDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-32 font-bold text-gray-900">Seller Dashboard</h1>
-          <p className="text-16 text-gray-600 mt-1">Add lots to open auctions and track your sales</p>
+          <h1 className="text-32 font-bold text-gray-900">{t('dashboard.seller.title')}</h1>
+          <p className="text-16 text-gray-600 mt-1">{t('dashboard.seller.subtitle')}</p>
         </div>
         <Link
           href="/lots/create"
@@ -44,7 +46,7 @@ export default function SellerDashboard() {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
-          Add New Lot
+          {t('dashboard.seller.addLot')}
         </Link>
       </div>
 
@@ -56,11 +58,11 @@ export default function SellerDashboard() {
         <div className="px-6 py-4 border-b border-gray-100 bg-green-50">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-20 font-semibold text-gray-900">Open Auctions</h2>
-              <p className="text-14 text-gray-600 mt-0.5">Add your lots to these auctions before they close</p>
+              <h2 className="text-20 font-semibold text-gray-900">{t('dashboard.seller.openAuctions')}</h2>
+              <p className="text-14 text-gray-600 mt-0.5">{t('dashboard.seller.openAuctionsDesc')}</p>
             </div>
             <span className="px-3 py-1 bg-green-600 text-white rounded-lg text-14 font-semibold">
-              {openAuctions?.length || 0} Available
+              {openAuctions?.length || 0} {t('dashboard.seller.available')}
             </span>
           </div>
         </div>
@@ -68,15 +70,15 @@ export default function SellerDashboard() {
         <div className="divide-y divide-gray-100">
           {auctionsLoading ? (
             <div className="p-12 text-center">
-              <div className="text-14 text-gray-500">Loading auctions...</div>
+              <div className="text-14 text-gray-500">{t('common.loading')}</div>
             </div>
           ) : openAuctions && openAuctions.length === 0 ? (
             <div className="p-12 text-center">
               <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p className="text-16 text-gray-500 font-medium mb-2">No open auctions</p>
-              <p className="text-14 text-gray-400">Check back later for new auction opportunities</p>
+              <p className="text-16 text-gray-500 font-medium mb-2">{t('dashboard.seller.noOpenAuctions')}</p>
+              <p className="text-14 text-gray-400">{t('dashboard.seller.noOpenAuctionsDesc')}</p>
             </div>
           ) : (
             openAuctions?.map((auction: any) => (
@@ -127,13 +129,13 @@ export default function SellerDashboard() {
                       href={`/auctions/${auction.auction_id}`}
                       className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg font-medium text-14 transition-colors"
                     >
-                      View Details
+                      {t('auction.viewDetails')}
                     </Link>
                     <Link
                       href="/lots/create"
                       className="px-5 py-2.5 bg-green-600 text-white hover:bg-green-700 rounded-lg font-semibold text-14 transition-colors"
                     >
-                      Add Lot
+                      {t('dashboard.seller.addLot')}
                     </Link>
                   </div>
                 </div>
@@ -147,8 +149,8 @@ export default function SellerDashboard() {
       {myActiveLots && myActiveLots.length > 0 && (
         <div className="bg-white rounded-lg border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="text-20 font-semibold text-gray-900">My Active Lots</h2>
-            <p className="text-14 text-gray-600 mt-0.5">Track your lots in ongoing auctions</p>
+            <h2 className="text-20 font-semibold text-gray-900">{t('dashboard.seller.myActiveLots')}</h2>
+            <p className="text-14 text-gray-600 mt-0.5">{t('dashboard.seller.myActiveLotsDesc')}</p>
           </div>
 
           <div className="divide-y divide-gray-100">
@@ -210,8 +212,8 @@ export default function SellerDashboard() {
       {myClearedLots && myClearedLots.length > 0 && (
         <div className="bg-white rounded-lg border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="text-20 font-semibold text-gray-900">Recent Results</h2>
-            <p className="text-14 text-gray-600 mt-0.5">Your successful sales from cleared auctions</p>
+            <h2 className="text-20 font-semibold text-gray-900">{t('dashboard.seller.recentResults')}</h2>
+            <p className="text-14 text-gray-600 mt-0.5">{t('dashboard.seller.recentResultsDesc')}</p>
           </div>
 
           <div className="divide-y divide-gray-100">

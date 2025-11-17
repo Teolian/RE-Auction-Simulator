@@ -17,6 +17,7 @@
       "addLot": "ロット追加",
       "openAuctions": "公開中のオークション",
       "openAuctionsDesc": "アクティブなオークションにロットを提出",
+      "available": "利用可能",
       "myActiveLots": "アクティブなロット",
       "myActiveLotsDesc": "進行中のオークションのロットを追跡",
       "recentResults": "最近の結果",
