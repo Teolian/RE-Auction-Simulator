@@ -89,33 +89,33 @@ export default function Navigation() {
       {/* Role indicator bar */}
       <div className={`h-1 ${currentRoleConfig.activeBg}`} />
 
-      <div className="max-w-[1400px] mx-auto px-8">
+      <div className="max-w-[1400px] mx-auto px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo / Brand */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-              <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <div className="text-18 font-bold text-gray-900">RE Auction</div>
-                <div className={`px-2 py-0.5 rounded text-10 font-semibold uppercase tracking-wide ${roleConfig[role].bgColor} ${roleConfig[role].textColor}`}>
+              <div className="flex items-center gap-1.5">
+                <div className="text-16 font-bold text-gray-900">RE Auction</div>
+                <div className={`px-1.5 py-0.5 rounded text-9 font-semibold uppercase tracking-wide ${roleConfig[role].bgColor} ${roleConfig[role].textColor}`}>
                   {roleConfig[role].name}
                 </div>
               </div>
-              <div className="text-11 text-gray-500 uppercase tracking-wide">Trading Platform</div>
+              <div className="text-10 text-gray-500 uppercase tracking-wide">Trading Platform</div>
             </div>
           </Link>
 
           {/* Navigation Links */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5">
             {filteredNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-15 font-medium transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-14 font-medium transition-colors ${
                   isActive(item.href)
                     ? 'bg-blue-50 text-blue-700'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
@@ -128,12 +128,12 @@ export default function Navigation() {
           </div>
 
           {/* Org Selector, Role Switcher & Quick Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-shrink-0">
             {/* Org Selector */}
             <OrgSelector />
 
             {/* Role Switcher */}
-            <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+            <div className="flex items-center gap-0.5 bg-gray-100 rounded-lg p-0.5">
               {(['seller', 'buyer', 'operator'] as UserRole[]).map((r) => {
                 const config = roleConfig[r]
                 const isActive = role === r
@@ -141,7 +141,7 @@ export default function Navigation() {
                   <button
                     key={r}
                     onClick={() => setRole(r)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-13 font-medium transition-all ${
+                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-12 font-medium transition-all ${
                       isActive
                         ? `${config.activeBg} text-white shadow-sm`
                         : `text-gray-600 ${config.hoverBg}`
@@ -159,9 +159,9 @@ export default function Navigation() {
             {role === 'operator' && (
               <Link
                 href="/auctions/create"
-                className="flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-15 transition-colors shadow-sm"
+                className="flex items-center gap-1.5 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-14 transition-colors shadow-sm"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
                 <span>New Auction</span>
