@@ -82,28 +82,11 @@ export default function BuyerDashboard({ auctions }: BuyerDashboardProps) {
               <p className="text-14 text-gray-400">Check back later for new bidding opportunities</p>
             </div>
           ) : (
-            openAuctions.map((auction, index) => {
-              const isFirst = index === 0
-              return (
+            openAuctions.map((auction) => (
                 <div
                   key={auction.auction_id}
-                  className={`p-5 transition-all ${
-                    isFirst
-                      ? 'bg-blue-50/50 border-l-4 border-l-blue-500 hover:bg-blue-50'
-                      : 'hover:bg-gray-50'
-                  }`}
+                  className="p-5 hover:bg-gray-50 transition-colors"
                 >
-                  {isFirst && (
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-600 text-white rounded-full text-12 font-bold animate-pulse">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
-                        </svg>
-                        DEMO: Next Step
-                      </span>
-                      <span className="text-13 text-blue-700 font-medium">⚡ Submit competitive bids to win energy</span>
-                    </div>
-                  )}
                   <div className="flex items-start justify-between gap-6">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-3">
@@ -146,19 +129,14 @@ export default function BuyerDashboard({ auctions }: BuyerDashboardProps) {
                       </Link>
                       <Link
                         href="/bids/create"
-                        className={`px-5 py-2.5 rounded-lg font-semibold text-14 transition-all ${
-                          isFirst
-                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/30 scale-105'
-                            : 'bg-blue-600 text-white hover:bg-blue-700'
-                        }`}
+                        className="px-5 py-2.5 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-semibold text-14 transition-colors"
                       >
-                        {isFirst ? '⚡ Submit Bid Now' : 'Submit Bid'}
+                        Submit Bid
                       </Link>
                     </div>
                   </div>
                 </div>
-              )
-            })
+              ))
           )}
         </div>
       </div>

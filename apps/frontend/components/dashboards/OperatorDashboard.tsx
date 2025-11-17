@@ -137,51 +137,11 @@ export default function OperatorDashboard({ auctions, onRefresh }: OperatorDashb
               </Link>
             </div>
           ) : (
-            auctions.map((auction, index) => {
-              // Highlight first locked auction (ready for clearing demo)
-              const isFirstLocked = auction.status === 'locked' &&
-                auctions.findIndex(a => a.status === 'locked') === index
-              // Highlight first open auction if no locked auctions
-              const isFirstOpen = auction.status === 'open' &&
-                !auctions.some(a => a.status === 'locked') &&
-                auctions.findIndex(a => a.status === 'open') === index
-              const isHighlighted = isFirstLocked || isFirstOpen
-
-              return (
+            auctions.map((auction) => (
                 <div
                   key={auction.auction_id}
-                  className={`p-5 transition-all ${
-                    isFirstLocked
-                      ? 'bg-purple-50/50 border-l-4 border-l-purple-500 hover:bg-purple-50'
-                      : isFirstOpen
-                      ? 'bg-yellow-50/50 border-l-4 border-l-yellow-500 hover:bg-yellow-50'
-                      : 'hover:bg-gray-50'
-                  }`}
+                  className="p-5 hover:bg-gray-50 transition-colors"
                 >
-                  {/* Demo hint badges */}
-                  {isFirstLocked && (
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-600 text-white rounded-full text-12 font-bold animate-pulse">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
-                        </svg>
-                        DEMO: Grand Finale
-                      </span>
-                      <span className="text-13 text-purple-700 font-medium">🎯 Run the clearing engine to match bids</span>
-                    </div>
-                  )}
-                  {isFirstOpen && (
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-yellow-600 text-white rounded-full text-12 font-bold">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                        </svg>
-                        Step 1
-                      </span>
-                      <span className="text-13 text-yellow-700 font-medium">Lock auction when bids are ready</span>
-                    </div>
-                  )}
-
                   <div className="flex items-start justify-between gap-6">
                     {/* Left: Auction Info */}
                     <div className="flex-1 min-w-0">
@@ -240,13 +200,9 @@ export default function OperatorDashboard({ auctions, onRefresh }: OperatorDashb
                         <button
                           onClick={() => handleLockAuction(auction.auction_id)}
                           disabled={processingAuction === auction.auction_id}
-                          className={`px-5 py-2.5 rounded-lg font-semibold text-14 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                            isFirstOpen
-                              ? 'bg-yellow-600 text-white hover:bg-yellow-700 shadow-lg shadow-yellow-600/30 scale-105'
-                              : 'bg-yellow-600 text-white hover:bg-yellow-700'
-                          }`}
+                          className="px-5 py-2.5 bg-yellow-600 text-white hover:bg-yellow-700 rounded-lg font-semibold text-14 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {processingAuction === auction.auction_id ? 'Locking...' : isFirstOpen ? '🔒 Lock Now' : 'Lock Auction'}
+                          {processingAuction === auction.auction_id ? 'Locking...' : 'Lock Auction'}
                         </button>
                       )}
 
@@ -254,13 +210,9 @@ export default function OperatorDashboard({ auctions, onRefresh }: OperatorDashb
                         <button
                           onClick={() => handleRunClearing(auction.auction_id)}
                           disabled={processingAuction === auction.auction_id}
-                          className={`px-5 py-2.5 rounded-lg font-bold text-14 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                            isFirstLocked
-                              ? 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg shadow-purple-600/40 scale-110'
-                              : 'bg-blue-600 text-white hover:bg-blue-700'
-                          }`}
+                          className="px-5 py-2.5 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-semibold text-14 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {processingAuction === auction.auction_id ? 'Running...' : isFirstLocked ? '⚡ Run Clearing' : 'Run Clearing'}
+                          {processingAuction === auction.auction_id ? 'Running...' : 'Run Clearing'}
                         </button>
                       )}
 
@@ -275,8 +227,7 @@ export default function OperatorDashboard({ auctions, onRefresh }: OperatorDashb
                     </div>
                   </div>
                 </div>
-              )
-            })
+              ))
           )}
         </div>
       </div>
