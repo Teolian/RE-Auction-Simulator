@@ -2,7 +2,8 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
+from datetime import datetime
 import sys
 import os
 
@@ -40,6 +41,58 @@ def health_check():
     return {"status": "ok", "version": "1.0.0"}
 
 
+# Statistics
+@app.get("/api/stats/market", response_model=MarketStatsResponse)
+def get_market_stats(db: Session = Depends(get_db)):
+    """Get market statistics for overview"""
+    from datetime import timedelta
+    from sqlalchemy import func
+
+    # Get active regions (areas with recent auctions)
+    thirty_days_ago = datetime.utcnow() - timedelta(days=30)
+    active_regions = db.query(models.Auction.area)\
+        .filter(models.Auction.created_at >= thirty_days_ago)\
+        .distinct()\
+        .all()
+    active_regions = [r[0] for r in active_regions]
+
+    # Get recent cleared auctions (last 5)
+    recent_auctions = db.query(models.Auction)\
+        .filter(models.Auction.status.in_(['cleared', 'published']))\
+        .filter(models.Auction.cleared_price.isnot(None))\
+        .order_by(models.Auction.created_at.desc())\
+        .limit(5)\
+        .all()
+
+    # Calculate average cleared price
+    avg_price = None
+    total_volume = 0.0
+    if recent_auctions:
+        prices = [a.cleared_price for a in recent_auctions if a.cleared_price]
+        if prices:
+            avg_price = sum(prices) / len(prices)
+        total_volume = sum(a.cleared_volume or 0 for a in recent_auctions)
+
+    # Build recent clearings list
+    recent_clearings = [
+        RecentClearing(
+            auction_id=a.auction_id,
+            area=a.area,
+            cleared_price=a.cleared_price,
+            cleared_volume=a.cleared_volume or 0,
+            cleared_at=a.created_at
+        )
+        for a in recent_auctions
+    ]
+
+    return MarketStatsResponse(
+        active_regions=active_regions,
+        avg_cleared_price=avg_price,
+        total_volume_traded=total_volume,
+        recent_clearings=recent_clearings
+    )
+
+
 # Auctions
 @app.post("/api/auctions", response_model=AuctionResponse)
 def create_auction(auction: AuctionCreate, db: Session = Depends(get_db)):
@@ -51,11 +104,72 @@ def create_auction(auction: AuctionCreate, db: Session = Depends(get_db)):
     return db_auction
 
 
-@app.get("/api/auctions", response_model=List[AuctionResponse])
-def list_auctions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    """List auctions"""
-    auctions = db.query(models.Auction).offset(skip).limit(limit).all()
-    return auctions
+@app.get("/api/auctions")
+def list_auctions(
+    skip: int = 0,
+    limit: int = 100,
+    status: Optional[str] = None,
+    area: Optional[str] = None,
+    with_counts: bool = False,
+    db: Session = Depends(get_db)
+):
+    """List auctions with optional filters and counts"""
+    from sqlalchemy import func
+
+    query = db.query(models.Auction)
+
+    # Apply filters
+    if status:
+        query = query.filter(models.Auction.status == status)
+    if area:
+        query = query.filter(models.Auction.area == area)
+
+    auctions = query.offset(skip).limit(limit).all()
+
+    # If counts not needed, return simple response
+    if not with_counts:
+        return auctions
+
+    # Enrich with counts
+    result = []
+    for auction in auctions:
+        # Count lots and bids
+        lots_count = db.query(models.Lot)\
+            .filter(models.Lot.auction_id == auction.auction_id)\
+            .count()
+
+        bids_count = db.query(models.Bid)\
+            .filter(models.Bid.auction_id == auction.auction_id)\
+            .count()
+
+        # Get price range from lots
+        price_stats = db.query(
+            func.min(models.Lot.reserve_price),
+            func.max(models.Lot.reserve_price)
+        ).filter(models.Lot.auction_id == auction.auction_id).first()
+
+        min_price = price_stats[0] if price_stats else None
+        max_price = price_stats[1] if price_stats else None
+
+        # Build enriched response
+        auction_dict = {
+            "auction_id": auction.auction_id,
+            "mode": auction.mode,
+            "area": auction.area,
+            "starts_at": auction.starts_at,
+            "ends_at": auction.ends_at,
+            "status": auction.status,
+            "cleared_price": auction.cleared_price,
+            "cleared_volume": auction.cleared_volume,
+            "created_at": auction.created_at,
+            "lots_count": lots_count,
+            "bids_count": bids_count,
+            "min_lot_price": min_price,
+            "max_lot_price": max_price
+        }
+        result.append(AuctionWithCountsResponse(**auction_dict))
+
+    return result
 
 
 @app.get("/api/auctions/{auction_id}", response_model=AuctionResponse)
@@ -130,6 +244,114 @@ def list_bids(auction_id: int = None, org_id: int = None, db: Session = Depends(
     if org_id:
         query = query.filter(models.Bid.org_id == org_id)
     return query.all()
+
+
+# User activity endpoints
+@app.get("/api/my/lots", response_model=List[MyLotResponse])
+def get_my_lots(org_id: int, status: Optional[str] = None, db: Session = Depends(get_db)):
+    """Get lots for specific organization with auction context"""
+    from sqlalchemy.orm import joinedload
+
+    # Get lots with joined auction data
+    query = db.query(models.Lot)\
+        .join(models.Plant, models.Lot.plant_id == models.Plant.plant_id)\
+        .join(models.Auction, models.Lot.auction_id == models.Auction.auction_id)\
+        .filter(models.Plant.org_id == org_id)
+
+    # Filter by status if provided
+    if status == 'active':
+        query = query.filter(models.Auction.status.in_(['open', 'locked']))
+    elif status == 'cleared':
+        query = query.filter(models.Auction.status.in_(['cleared', 'published']))
+    elif status and status != 'all':
+        query = query.filter(models.Auction.status == status)
+
+    lots_with_auctions = query.all()
+
+    # Build response with auction context
+    result = []
+    for lot in lots_with_auctions:
+        auction = lot.auction
+
+        # Get match data if auction is cleared
+        matched_volume = None
+        cleared_price = None
+        if auction.status in ['cleared', 'published']:
+            match = db.query(models.Match)\
+                .filter(models.Match.lot_id == lot.lot_id)\
+                .first()
+            if match:
+                matched_volume = match.cleared_volume
+                cleared_price = match.cleared_price
+
+        result.append(MyLotResponse(
+            lot_id=lot.lot_id,
+            auction_id=auction.auction_id,
+            auction_area=auction.area,
+            auction_status=auction.status,
+            min_vol_mwh=lot.min_vol_mwh,
+            max_vol_mwh=lot.max_vol_mwh,
+            reserve_price=lot.reserve_price,
+            created_at=lot.created_at,
+            matched_volume=matched_volume,
+            cleared_price=cleared_price
+        ))
+
+    return result
+
+
+@app.get("/api/my/bids", response_model=List[MyBidResponse])
+def get_my_bids(org_id: int, status: Optional[str] = None, db: Session = Depends(get_db)):
+    """Get bids for specific organization with auction context"""
+    from sqlalchemy import func
+
+    # Get bids with joined auction data
+    query = db.query(models.Bid)\
+        .join(models.Auction, models.Bid.auction_id == models.Auction.auction_id)\
+        .filter(models.Bid.org_id == org_id)
+
+    # Filter by status if provided
+    if status == 'active':
+        query = query.filter(models.Auction.status.in_(['open', 'locked']))
+    elif status == 'cleared':
+        query = query.filter(models.Auction.status.in_(['cleared', 'published']))
+    elif status and status != 'all':
+        query = query.filter(models.Auction.status == status)
+
+    bids_with_auctions = query.all()
+
+    # Build response with auction context
+    result = []
+    for bid in bids_with_auctions:
+        auction = bid.auction
+
+        # Get match data if auction is cleared
+        won_volume = None
+        cleared_price = None
+        if auction.status in ['cleared', 'published']:
+            # Sum all matches for this bid
+            match_sum = db.query(func.sum(models.Match.cleared_volume))\
+                .filter(models.Match.bid_id == bid.bid_id)\
+                .scalar()
+
+            if match_sum:
+                won_volume = match_sum
+                # Get cleared price from auction
+                cleared_price = auction.cleared_price
+
+        result.append(MyBidResponse(
+            bid_id=bid.bid_id,
+            auction_id=auction.auction_id,
+            auction_area=auction.area,
+            auction_status=auction.status,
+            price_yen_kwh=bid.price_yen_kwh,
+            volume_mwh=bid.volume_mwh,
+            created_at=bid.created_at,
+            won_volume=won_volume,
+            cleared_price=cleared_price
+        ))
+
+    return result
 
 
 # Auction operations

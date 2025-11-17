@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useRole, roleConfig, UserRole } from '@/contexts/RoleContext'
+import OrgSelector from './OrgSelector'
 
 export default function Navigation() {
   const pathname = usePathname()
@@ -126,8 +127,11 @@ export default function Navigation() {
             ))}
           </div>
 
-          {/* Role Switcher & Quick Actions */}
+          {/* Org Selector, Role Switcher & Quick Actions */}
           <div className="flex items-center gap-3">
+            {/* Org Selector */}
+            <OrgSelector />
+
             {/* Role Switcher */}
             <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
               {(['seller', 'buyer', 'operator'] as UserRole[]).map((r) => {

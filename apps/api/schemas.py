@@ -215,3 +215,55 @@ class ContractResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# Extended auction response with counts
+class AuctionWithCountsResponse(AuctionResponse):
+    lots_count: int = 0
+    bids_count: int = 0
+    min_lot_price: Optional[float] = None
+    max_lot_price: Optional[float] = None
+
+
+# Market statistics
+class RecentClearing(BaseModel):
+    auction_id: int
+    area: str
+    cleared_price: float
+    cleared_volume: float
+    cleared_at: datetime
+
+
+class MarketStatsResponse(BaseModel):
+    active_regions: List[str]
+    avg_cleared_price: Optional[float] = None
+    total_volume_traded: float = 0.0
+    recent_clearings: List[RecentClearing] = []
+
+
+# User activity schemas
+class MyLotResponse(BaseModel):
+    lot_id: int
+    auction_id: int
+    auction_area: str
+    auction_status: AuctionStatus
+    min_vol_mwh: float
+    max_vol_mwh: float
+    reserve_price: float
+    created_at: datetime
+    # Cleared data (if applicable)
+    matched_volume: Optional[float] = None
+    cleared_price: Optional[float] = None
+
+
+class MyBidResponse(BaseModel):
+    bid_id: int
+    auction_id: int
+    auction_area: str
+    auction_status: AuctionStatus
+    price_yen_kwh: float
+    volume_mwh: float
+    created_at: datetime
+    # Cleared data (if applicable)
+    won_volume: Optional[float] = None
+    cleared_price: Optional[float] = None
