@@ -155,11 +155,33 @@ export default function Navigation() {
               })}
             </div>
 
-            {/* Quick Action - Show only for operator */}
+            {/* Quick Action - Role-specific */}
+            {role === 'seller' && (
+              <Link
+                href="/lots/create"
+                className="flex items-center gap-2 px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium text-15 transition-colors shadow-sm min-w-[140px] justify-center"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                <span>Add Lot</span>
+              </Link>
+            )}
+            {role === 'buyer' && (
+              <Link
+                href="/bids/create"
+                className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-15 transition-colors shadow-sm min-w-[140px] justify-center"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span>Place Bid</span>
+              </Link>
+            )}
             {role === 'operator' && (
               <Link
                 href="/auctions/create"
-                className="flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-15 transition-colors shadow-sm"
+                className="flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-15 transition-colors shadow-sm min-w-[140px] justify-center"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
