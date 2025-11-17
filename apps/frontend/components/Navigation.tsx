@@ -3,14 +3,47 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
 import { useRole, roleConfig, UserRole } from '@/contexts/RoleContext'
+import { useOrg, type Org } from '@/contexts/OrgContext'
 import OrgSelector from './OrgSelector'
 import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Navigation() {
   const pathname = usePathname()
   const { role, setRole } = useRole()
+  const { org, setOrg } = useOrg()
   const t = useTranslations()
+  const [allOrgs, setAllOrgs] = useState<Org[]>([])
+
+  // Load all orgs for role switching
+  useEffect(() => {
+    async function loadOrgs() {
+      try {
+        const response = await fetch('http://localhost:8000/api/orgs')
+        if (response.ok) {
+          const data = await response.json()
+          setAllOrgs(data)
+        }
+      } catch (error) {
+        console.error('Failed to load organizations:', error)
+      }
+    }
+    loadOrgs()
+  }, [])
+
+  // Handle role switch - find and select an org of that type
+  const handleRoleSwitch = (newRole: UserRole) => {
+    // Find an org of the desired type
+    const orgOfType = allOrgs.find(o => o.type === newRole)
+    if (orgOfType) {
+      setOrg(orgOfType)
+      setRole(newRole)
+    } else {
+      // No org of this type, just switch role
+      setRole(newRole)
+    }
+  }
 
   const navItems = [
     {
@@ -106,7 +139,7 @@ export default function Navigation() {
                 return (
                   <button
                     key={r}
-                    onClick={() => setRole(r)}
+                    onClick={() => handleRoleSwitch(r)}
                     className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-12 font-medium transition-all ${
                       isActive
                         ? `${config.activeBg} text-white shadow-sm`
