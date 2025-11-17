@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import Navigation from '@/components/Navigation'
-import { RoleProvider } from '@/contexts/RoleContext'
-import { OrgProvider } from '@/contexts/OrgContext'
-import {NextIntlClientProvider} from 'next-intl';
+import ClientProviders from '@/components/ClientProviders'
 import {getMessages} from 'next-intl/server';
 import {locales} from '@/i18n';
 
@@ -25,17 +23,13 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      <OrgProvider>
-        <RoleProvider>
-          <div className="min-h-screen bg-gray-50">
-            <Navigation />
-            <main className="max-w-[1400px] mx-auto px-8 py-8">
-              {children}
-            </main>
-          </div>
-        </RoleProvider>
-      </OrgProvider>
-    </NextIntlClientProvider>
+    <ClientProviders messages={messages}>
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <main className="max-w-[1400px] mx-auto px-8 py-8">
+          {children}
+        </main>
+      </div>
+    </ClientProviders>
   )
 }
