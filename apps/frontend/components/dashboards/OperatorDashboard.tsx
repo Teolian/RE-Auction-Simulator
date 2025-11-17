@@ -13,7 +13,7 @@ interface OperatorDashboardProps {
 }
 
 export default function OperatorDashboard({ auctions, onRefresh }: OperatorDashboardProps) {
-  const [processingAuction, setProcessingAuction] = useState<string | null>(null)
+  const [processingAuction, setProcessingAuction] = useState<number | null>(null)
 
   const formatDateTime = (date: string) => {
     return formatInTimeZone(new Date(date), TOKYO_TZ, 'yyyy-MM-dd HH:mm') + ' JST'
@@ -38,7 +38,7 @@ export default function OperatorDashboard({ auctions, onRefresh }: OperatorDashb
     cleared: auctions.filter(a => a.status === 'cleared' || a.status === 'published').length,
   }
 
-  const handleLockAuction = async (auctionId: string) => {
+  const handleLockAuction = async (auctionId: number) => {
     setProcessingAuction(auctionId)
     try {
       const response = await fetch(`http://localhost:8000/api/auctions/${auctionId}/lock`, {
@@ -54,7 +54,7 @@ export default function OperatorDashboard({ auctions, onRefresh }: OperatorDashb
     }
   }
 
-  const handleRunClearing = async (auctionId: string) => {
+  const handleRunClearing = async (auctionId: number) => {
     setProcessingAuction(auctionId)
     try {
       const response = await fetch(`http://localhost:8000/api/auctions/${auctionId}/clear`, {
