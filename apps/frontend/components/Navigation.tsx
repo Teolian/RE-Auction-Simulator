@@ -130,7 +130,7 @@ export default function Navigation() {
           <div className="flex items-center gap-3">
             {/* Role Switcher */}
             <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-              {(['operator', 'seller', 'buyer'] as UserRole[]).map((r) => {
+              {(['seller', 'buyer', 'operator'] as UserRole[]).map((r) => {
                 const config = roleConfig[r]
                 const isActive = role === r
                 return (
