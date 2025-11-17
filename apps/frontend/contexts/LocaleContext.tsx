@@ -1,6 +1,8 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import enMessages from '@/messages/en.json'
+import jaMessages from '@/messages/ja.json'
 
 export type Locale = 'en' | 'ja'
 
@@ -14,56 +16,33 @@ const LocaleContext = createContext<LocaleContextType | undefined>(undefined)
 
 const LOCALE_STORAGE_KEY = 're-auction-locale'
 
+// Preload messages for instant access
+const messagesMap = {
+  en: enMessages,
+  ja: jaMessages,
+}
+
+// Get initial locale from localStorage (only runs on client)
+const getInitialLocale = (): Locale => {
+  if (typeof window === 'undefined') return 'en'
+  const saved = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null
+  return saved && (saved === 'en' || saved === 'ja') ? saved : 'en'
+}
+
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('en')
-  const [messages, setMessages] = useState<any>({})
-  const [isLoading, setIsLoading] = useState(true)
+  const [locale, setLocaleState] = useState<Locale>(getInitialLocale)
+  const [messages, setMessages] = useState<any>(messagesMap[getInitialLocale()])
 
-  // Load locale from localStorage and fetch messages
+  // Sync locale to localStorage when it changes
   useEffect(() => {
-    const loadLocale = async () => {
-      // Get saved locale from localStorage
-      const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale | null
-      const initialLocale = savedLocale && (savedLocale === 'en' || savedLocale === 'ja')
-        ? savedLocale
-        : 'en'
-
-      // Load messages for the locale
-      try {
-        const messagesModule = await import(`@/messages/${initialLocale}.json`)
-        setMessages(messagesModule.default)
-        setLocaleState(initialLocale)
-      } catch (error) {
-        console.error('Failed to load messages:', error)
-        // Fallback to English
-        const fallbackMessages = await import('@/messages/en.json')
-        setMessages(fallbackMessages.default)
-        setLocaleState('en')
-      }
-
-      setIsLoading(false)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(LOCALE_STORAGE_KEY, locale)
     }
+  }, [locale])
 
-    loadLocale()
-  }, [])
-
-  // Change locale and load new messages
-  const setLocale = async (newLocale: Locale) => {
-    setIsLoading(true)
-    try {
-      const messagesModule = await import(`@/messages/${newLocale}.json`)
-      setMessages(messagesModule.default)
-      setLocaleState(newLocale)
-      localStorage.setItem(LOCALE_STORAGE_KEY, newLocale)
-    } catch (error) {
-      console.error('Failed to load messages for locale:', newLocale, error)
-    }
-    setIsLoading(false)
-  }
-
-  // Show nothing while loading to avoid flash of wrong language
-  if (isLoading) {
-    return null
+  const setLocale = (newLocale: Locale) => {
+    setMessages(messagesMap[newLocale])
+    setLocaleState(newLocale)
   }
 
   return (
