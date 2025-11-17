@@ -69,30 +69,30 @@ def seed_data():
     # ===== PLANTS =====
     plants_data = [
         # SunPower Japan K.K.
-        {"org": sellers[0], "type": "PV", "prefecture": "Tokyo", "ac_mw": 120.0, "commissioned": "2019-03", "panels": 300000},
-        {"org": sellers[0], "type": "PV", "prefecture": "Saitama", "ac_mw": 85.0, "commissioned": "2020-11", "panels": 212500},
+        {"org": sellers[0], "type": "pv", "prefecture": "Tokyo", "ac_mw": 120.0, "commissioned": "2019-03", "panels": 300000},
+        {"org": sellers[0], "type": "pv", "prefecture": "Saitama", "ac_mw": 85.0, "commissioned": "2020-11", "panels": 212500},
 
         # Tokyo Renewable Energy
-        {"org": sellers[1], "type": "PV", "prefecture": "Kanagawa", "ac_mw": 95.0, "commissioned": "2021-06", "panels": 237500},
-        {"org": sellers[1], "type": "WIND", "prefecture": "Chiba", "ac_mw": 60.0, "commissioned": "2020-09", "turbines": 20},
+        {"org": sellers[1], "type": "pv", "prefecture": "Kanagawa", "ac_mw": 95.0, "commissioned": "2021-06", "panels": 237500},
+        {"org": sellers[1], "type": "wind", "prefecture": "Chiba", "ac_mw": 60.0, "commissioned": "2020-09", "turbines": 20},
 
         # Kyushu Wind Farm Co.
-        {"org": sellers[2], "type": "WIND", "prefecture": "Fukuoka", "ac_mw": 150.0, "commissioned": "2018-12", "turbines": 50},
-        {"org": sellers[2], "type": "WIND", "prefecture": "Nagasaki", "ac_mw": 90.0, "commissioned": "2022-04", "turbines": 30},
+        {"org": sellers[2], "type": "wind", "prefecture": "Fukuoka", "ac_mw": 150.0, "commissioned": "2018-12", "turbines": 50},
+        {"org": sellers[2], "type": "wind", "prefecture": "Nagasaki", "ac_mw": 90.0, "commissioned": "2022-04", "turbines": 30},
 
         # Hokkaido Solar Systems
-        {"org": sellers[3], "type": "PV", "prefecture": "Hokkaido", "ac_mw": 110.0, "commissioned": "2020-05", "panels": 275000},
-        {"org": sellers[3], "type": "WIND", "prefecture": "Hokkaido", "ac_mw": 75.0, "commissioned": "2021-08", "turbines": 25},
+        {"org": sellers[3], "type": "pv", "prefecture": "Hokkaido", "ac_mw": 110.0, "commissioned": "2020-05", "panels": 275000},
+        {"org": sellers[3], "type": "wind", "prefecture": "Hokkaido", "ac_mw": 75.0, "commissioned": "2021-08", "turbines": 25},
 
         # Osaka Green Energy
-        {"org": sellers[4], "type": "PV", "prefecture": "Osaka", "ac_mw": 70.0, "commissioned": "2022-01", "panels": 175000},
-        {"org": sellers[4], "type": "PV", "prefecture": "Kyoto", "ac_mw": 55.0, "commissioned": "2023-03", "panels": 137500},
+        {"org": sellers[4], "type": "pv", "prefecture": "Osaka", "ac_mw": 70.0, "commissioned": "2022-01", "panels": 175000},
+        {"org": sellers[4], "type": "pv", "prefecture": "Kyoto", "ac_mw": 55.0, "commissioned": "2023-03", "panels": 137500},
     ]
 
     plants = []
     for p in plants_data:
         profile = {"commissioned": p["commissioned"]}
-        if p["type"] == "PV":
+        if p["type"] == "pv":
             profile["panels"] = p["panels"]
         else:
             profile["turbines"] = p["turbines"]
@@ -107,85 +107,85 @@ def seed_data():
 
     db.add_all(plants)
     db.commit()
-    print(f"✅ Created {len(plants)} plants (PV: {sum(1 for p in plants if p.type == 'PV')}, Wind: {sum(1 for p in plants if p.type == 'WIND')})")
+    print(f"✅ Created {len(plants)} plants (PV: {sum(1 for p in plants if p.type == 'pv')}, Wind: {sum(1 for p in plants if p.type == 'wind')})")
 
     # ===== AUCTIONS =====
     now = datetime.now()
     auctions_data = [
         # CLEARED auctions (past results)
         {
-            "mode": "UNIFORM_PRICE",
+            "mode": "uniform_price",
             "area": "Kanto",
             "starts_at": now - timedelta(days=30),
             "ends_at": now - timedelta(days=23),
-            "status": "CLEARED",
+            "status": "cleared",
             "cleared_price": 14.2,
             "cleared_volume": 450.0
         },
         {
-            "mode": "PAY_AS_BID",
+            "mode": "pay_as_bid",
             "area": "Kansai",
             "starts_at": now - timedelta(days=25),
             "ends_at": now - timedelta(days=18),
-            "status": "CLEARED",
+            "status": "cleared",
             "cleared_price": 13.8,
             "cleared_volume": 380.0
         },
         {
-            "mode": "UNIFORM_PRICE",
+            "mode": "uniform_price",
             "area": "Kyushu",
             "starts_at": now - timedelta(days=20),
             "ends_at": now - timedelta(days=13),
-            "status": "CLEARED",
+            "status": "cleared",
             "cleared_price": 15.1,
             "cleared_volume": 520.0
         },
 
         # LOCKED auctions (ready for clearing)
         {
-            "mode": "UNIFORM_PRICE",
+            "mode": "uniform_price",
             "area": "Tohoku",
             "starts_at": now - timedelta(days=10),
             "ends_at": now - timedelta(days=1),
-            "status": "LOCKED",
+            "status": "locked",
             "cleared_price": None,
             "cleared_volume": None
         },
 
         # OPEN auctions (active bidding)
         {
-            "mode": "UNIFORM_PRICE",
+            "mode": "uniform_price",
             "area": "Kanto",
             "starts_at": now - timedelta(days=3),
             "ends_at": now + timedelta(days=4),
-            "status": "OPEN",
+            "status": "open",
             "cleared_price": None,
             "cleared_volume": None
         },
         {
-            "mode": "PAY_AS_BID",
+            "mode": "pay_as_bid",
             "area": "Kansai",
             "starts_at": now - timedelta(days=2),
             "ends_at": now + timedelta(days=5),
-            "status": "OPEN",
+            "status": "open",
             "cleared_price": None,
             "cleared_volume": None
         },
         {
-            "mode": "UNIFORM_PRICE",
+            "mode": "uniform_price",
             "area": "Chubu",
             "starts_at": now - timedelta(days=1),
             "ends_at": now + timedelta(days=6),
-            "status": "OPEN",
+            "status": "open",
             "cleared_price": None,
             "cleared_volume": None
         },
         {
-            "mode": "PAY_AS_BID",
+            "mode": "pay_as_bid",
             "area": "Hokkaido",
             "starts_at": now,
             "ends_at": now + timedelta(days=7),
-            "status": "OPEN",
+            "status": "open",
             "cleared_price": None,
             "cleared_volume": None
         },
@@ -205,7 +205,7 @@ def seed_data():
 
     db.add_all(auctions)
     db.commit()
-    print(f"✅ Created {len(auctions)} auctions (Open: {sum(1 for a in auctions if a.status == 'OPEN')}, Locked: {sum(1 for a in auctions if a.status == 'LOCKED')}, Cleared: {sum(1 for a in auctions if a.status == 'CLEARED')})")
+    print(f"✅ Created {len(auctions)} auctions (Open: {sum(1 for a in auctions if a.status == 'open')}, Locked: {sum(1 for a in auctions if a.status == 'locked')}, Cleared: {sum(1 for a in auctions if a.status == 'cleared')})")
 
     # ===== LOTS =====
     lots = []
@@ -387,9 +387,9 @@ def seed_data():
     print(f"  Users: {db.query(models.User).count()}")
     print(f"  Plants: {db.query(models.Plant).count()}")
     print(f"  Auctions: {db.query(models.Auction).count()}")
-    print(f"    - Open: {sum(1 for a in auctions if a.status == 'OPEN')}")
-    print(f"    - Locked: {sum(1 for a in auctions if a.status == 'LOCKED')}")
-    print(f"    - Cleared: {sum(1 for a in auctions if a.status == 'CLEARED')}")
+    print(f"    - Open: {sum(1 for a in auctions if a.status == 'open')}")
+    print(f"    - Locked: {sum(1 for a in auctions if a.status == 'locked')}")
+    print(f"    - Cleared: {sum(1 for a in auctions if a.status == 'cleared')}")
     print(f"  Lots: {db.query(models.Lot).count()}")
     print(f"  Bids: {db.query(models.Bid).count()}")
     print(f"  Matches: {db.query(models.Match).count()}")
