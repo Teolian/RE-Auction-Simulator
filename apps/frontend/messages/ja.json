@@ -51,6 +51,8 @@
       "cleared": "クリア済み",
       "actionQueue": "アクションキュー",
       "actionQueueDesc": "対応が必要なオークション",
+      "actionNeeded": "必要なアクション",
+      "readyToLock": "ロック準備完了",
       "pending": "保留中",
       "allAuctions": "全オークション",
       "allAuctionsDesc": "完全なオークションパイプライン",
@@ -115,6 +117,8 @@
     "loading": "読み込み中...",
     "selectOrg": "組織を選択してください",
     "selectOrgDesc": "トップナビゲーションの組織セレクターを使用してください",
+    "organization": "組織",
+    "selectOrganization": "組織を選択",
     "auctions": "オークション",
     "lotsCount": "ロット",
     "bidsCount": "入札"

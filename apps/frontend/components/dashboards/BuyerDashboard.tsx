@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { useOrg } from '@/contexts/OrgContext'
 import { useAuctionsWithCounts, useMyBids } from '@/lib/hooks'
 import MarketOverview from '@/components/MarketOverview'
@@ -9,6 +10,7 @@ import { formatInTimeZone } from 'date-fns-tz'
 const TOKYO_TZ = 'Asia/Tokyo'
 
 export default function BuyerDashboard() {
+  const t = useTranslations()
   const { org } = useOrg()
   const { data: openAuctions, loading: auctionsLoading } = useAuctionsWithCounts({ status: 'open' })
   const { data: myActiveBids, loading: bidsLoading } = useMyBids(org?.org_id || null, 'active')
@@ -25,8 +27,8 @@ export default function BuyerDashboard() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="text-16 text-gray-500 mb-2">Please select an organization</div>
-          <div className="text-14 text-gray-400">Use the organization selector in the top navigation</div>
+          <div className="text-16 text-gray-500 mb-2">{t('common.selectOrg')}</div>
+          <div className="text-14 text-gray-400">{t('common.selectOrgDesc')}</div>
         </div>
       </div>
     )
@@ -37,8 +39,8 @@ export default function BuyerDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-32 font-bold text-gray-900">Buyer Dashboard</h1>
-          <p className="text-16 text-gray-600 mt-1">Browse auctions and submit sealed bids</p>
+          <h1 className="text-32 font-bold text-gray-900">{t('dashboard.buyer.title')}</h1>
+          <p className="text-16 text-gray-600 mt-1">{t('dashboard.buyer.subtitle')}</p>
         </div>
         <Link
           href="/bids/create"
@@ -47,7 +49,7 @@ export default function BuyerDashboard() {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          Submit Bid
+          {t('dashboard.buyer.submitBid')}
         </Link>
       </div>
 
@@ -59,11 +61,11 @@ export default function BuyerDashboard() {
         <div className="px-6 py-4 border-b border-gray-100 bg-blue-50">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-20 font-semibold text-gray-900">Available Lots</h2>
-              <p className="text-14 text-gray-600 mt-0.5">Submit sealed bids before auction closes</p>
+              <h2 className="text-20 font-semibold text-gray-900">{t('dashboard.buyer.availableLots')}</h2>
+              <p className="text-14 text-gray-600 mt-0.5">{t('dashboard.buyer.availableLotsDesc')}</p>
             </div>
             <span className="px-3 py-1 bg-blue-600 text-white rounded-lg text-14 font-semibold">
-              {auctionsWithLots.length} Auctions
+              {auctionsWithLots.length} {t('common.auctions')}
             </span>
           </div>
         </div>
@@ -71,15 +73,15 @@ export default function BuyerDashboard() {
         <div className="divide-y divide-gray-100">
           {auctionsLoading ? (
             <div className="p-12 text-center">
-              <div className="text-14 text-gray-500">Loading auctions...</div>
+              <div className="text-14 text-gray-500">{t('common.loading')}</div>
             </div>
           ) : auctionsWithLots.length === 0 ? (
             <div className="p-12 text-center">
               <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
-              <p className="text-16 text-gray-500 font-medium mb-2">No auctions with lots available</p>
-              <p className="text-14 text-gray-400">Check back later for new bidding opportunities</p>
+              <p className="text-16 text-gray-500 font-medium mb-2">{t('dashboard.buyer.noAuctions')}</p>
+              <p className="text-14 text-gray-400">{t('dashboard.buyer.noAuctionsDesc')}</p>
             </div>
           ) : (
             auctionsWithLots.map((auction: any) => (
@@ -130,13 +132,13 @@ export default function BuyerDashboard() {
                       href={`/auctions/${auction.auction_id}`}
                       className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg font-medium text-14 transition-colors"
                     >
-                      View Lots
+                      {t('auction.viewLots')}
                     </Link>
                     <Link
                       href="/bids/create"
                       className="px-5 py-2.5 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-semibold text-14 transition-colors"
                     >
-                      Submit Bid
+                      {t('dashboard.buyer.submitBid')}
                     </Link>
                   </div>
                 </div>
@@ -150,8 +152,8 @@ export default function BuyerDashboard() {
       {myActiveBids && myActiveBids.length > 0 && (
         <div className="bg-white rounded-lg border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="text-20 font-semibold text-gray-900">My Active Bids</h2>
-            <p className="text-14 text-gray-600 mt-0.5">Track your bids in ongoing auctions</p>
+            <h2 className="text-20 font-semibold text-gray-900">{t('dashboard.buyer.myActiveBids')}</h2>
+            <p className="text-14 text-gray-600 mt-0.5">{t('dashboard.buyer.myActiveBidsDesc')}</p>
           </div>
 
           <div className="divide-y divide-gray-100">
@@ -200,7 +202,7 @@ export default function BuyerDashboard() {
                     href={`/auctions/${bid.auction_id}`}
                     className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg font-medium text-14 transition-colors"
                   >
-                    View Auction
+                    {t('auction.viewAuction')}
                   </Link>
                 </div>
               </div>
@@ -213,8 +215,8 @@ export default function BuyerDashboard() {
       {myClearedBids && myClearedBids.length > 0 && (
         <div className="bg-white rounded-lg border border-gray-200">
           <div className="px-6 py-4 border-b border-gray-100">
-            <h2 className="text-20 font-semibold text-gray-900">My Awards</h2>
-            <p className="text-14 text-gray-600 mt-0.5">Energy you won from cleared auctions</p>
+            <h2 className="text-20 font-semibold text-gray-900">{t('dashboard.buyer.myAwards')}</h2>
+            <p className="text-14 text-gray-600 mt-0.5">{t('dashboard.buyer.myAwardsDesc')}</p>
           </div>
 
           <div className="divide-y divide-gray-100">
@@ -264,7 +266,7 @@ export default function BuyerDashboard() {
                     href={`/auctions/${bid.auction_id}`}
                     className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium text-14 transition-colors"
                   >
-                    View Report
+                    {t('auction.viewReport')}
                   </Link>
                 </div>
               </div>

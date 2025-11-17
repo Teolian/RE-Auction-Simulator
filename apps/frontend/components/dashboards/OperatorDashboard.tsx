@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { useAuctionsWithCounts } from '@/lib/hooks'
 import { formatInTimeZone } from 'date-fns-tz'
 
 const TOKYO_TZ = 'Asia/Tokyo'
 
 export default function OperatorDashboard() {
+  const t = useTranslations()
   const { data: auctions, loading, error } = useAuctionsWithCounts({})
   const [processingAuction, setProcessingAuction] = useState<number | null>(null)
   const [refreshKey, setRefreshKey] = useState(0)
@@ -82,8 +84,8 @@ export default function OperatorDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-32 font-bold text-gray-900">Auction Operations</h1>
-          <p className="text-16 text-gray-600 mt-1">Manage platform auctions and run clearing</p>
+          <h1 className="text-32 font-bold text-gray-900">{t('dashboard.operator.title')}</h1>
+          <p className="text-16 text-gray-600 mt-1">{t('dashboard.operator.subtitle')}</p>
         </div>
         <Link
           href="/auctions/create"
@@ -92,30 +94,30 @@ export default function OperatorDashboard() {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
-          Create New Auction
+          {t('dashboard.operator.createAuction')}
         </Link>
       </div>
 
       {/* System Health Stats */}
       <div className="grid grid-cols-4 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <div className="text-12 text-gray-500 mb-1 uppercase tracking-wide font-semibold">Total Auctions</div>
+          <div className="text-12 text-gray-500 mb-1 uppercase tracking-wide font-semibold">{t('dashboard.operator.totalAuctions')}</div>
           <div className="text-32 font-bold text-gray-900">{stats.total}</div>
         </div>
         <div className="bg-green-50 rounded-lg border border-green-200 p-5">
-          <div className="text-12 text-green-700 mb-1 uppercase tracking-wide font-semibold">Open</div>
+          <div className="text-12 text-green-700 mb-1 uppercase tracking-wide font-semibold">{t('dashboard.operator.open')}</div>
           <div className="text-32 font-bold text-green-700">{stats.open}</div>
-          <div className="text-12 text-green-600 mt-1">Accepting bids</div>
+          <div className="text-12 text-green-600 mt-1">{t('dashboard.operator.acceptingBids')}</div>
         </div>
         <div className="bg-yellow-50 rounded-lg border border-yellow-200 p-5">
-          <div className="text-12 text-yellow-700 mb-1 uppercase tracking-wide font-semibold">Locked</div>
+          <div className="text-12 text-yellow-700 mb-1 uppercase tracking-wide font-semibold">{t('dashboard.operator.locked')}</div>
           <div className="text-32 font-bold text-yellow-700">{stats.locked}</div>
-          <div className="text-12 text-yellow-600 mt-1">Ready for clearing</div>
+          <div className="text-12 text-yellow-600 mt-1">{t('dashboard.operator.readyForClearing')}</div>
         </div>
         <div className="bg-blue-50 rounded-lg border border-blue-200 p-5">
-          <div className="text-12 text-blue-700 mb-1 uppercase tracking-wide font-semibold">Cleared</div>
+          <div className="text-12 text-blue-700 mb-1 uppercase tracking-wide font-semibold">{t('dashboard.operator.cleared')}</div>
           <div className="text-32 font-bold text-blue-700">{stats.cleared}</div>
-          <div className="text-12 text-blue-600 mt-1">Results published</div>
+          <div className="text-12 text-blue-600 mt-1">{t('dashboard.operator.resultsPublished')}</div>
         </div>
       </div>
 
@@ -129,12 +131,12 @@ export default function OperatorDashboard() {
                   <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
                 </svg>
                 <div>
-                  <h2 className="text-20 font-semibold text-gray-900">Action Queue</h2>
-                  <p className="text-14 text-gray-600 mt-0.5">Auctions requiring your attention</p>
+                  <h2 className="text-20 font-semibold text-gray-900">{t('dashboard.operator.actionQueue')}</h2>
+                  <p className="text-14 text-gray-600 mt-0.5">{t('dashboard.operator.actionQueueDesc')}</p>
                 </div>
               </div>
               <span className="px-3 py-1 bg-purple-600 text-white rounded-lg text-14 font-semibold">
-                {actionQueue.length} Pending
+                {actionQueue.length} {t('dashboard.operator.pending')}
               </span>
             </div>
           </div>
@@ -165,17 +167,17 @@ export default function OperatorDashboard() {
 
                       <div className="grid grid-cols-3 gap-4 text-14">
                         <div>
-                          <div className="text-gray-500 text-12 mb-0.5">Auction ID</div>
+                          <div className="text-gray-500 text-12 mb-0.5">{t('auction.id')}</div>
                           <div className="font-mono text-gray-900">#{auction.auction_id}</div>
                         </div>
                         <div>
-                          <div className="text-gray-500 text-12 mb-0.5">Lots / Bids</div>
+                          <div className="text-gray-500 text-12 mb-0.5">{t('auction.lots')} / {t('auction.bids')}</div>
                           <div className="text-gray-900 font-semibold">{auction.lots_count} / {auction.bids_count}</div>
                         </div>
                         <div>
-                          <div className="text-gray-500 text-12 mb-0.5">Action Needed</div>
+                          <div className="text-gray-500 text-12 mb-0.5">{t('dashboard.operator.actionNeeded')}</div>
                           <div className={isLocked ? 'text-purple-600 font-semibold' : 'text-yellow-600 font-semibold'}>
-                            {isLocked ? 'Run clearing' : 'Ready to lock'}
+                            {isLocked ? t('auction.runClearing') : t('dashboard.operator.readyToLock')}
                           </div>
                         </div>
                       </div>
@@ -188,7 +190,7 @@ export default function OperatorDashboard() {
                           disabled={processingAuction === auction.auction_id}
                           className="px-5 py-2.5 bg-yellow-600 text-white hover:bg-yellow-700 rounded-lg font-semibold text-14 transition-colors disabled:opacity-50"
                         >
-                          {processingAuction === auction.auction_id ? 'Locking...' : 'Lock Auction'}
+                          {processingAuction === auction.auction_id ? t('auction.locking') : t('auction.lockAuction')}
                         </button>
                       )}
                       {auction.status === 'locked' && (
@@ -197,7 +199,7 @@ export default function OperatorDashboard() {
                           disabled={processingAuction === auction.auction_id}
                           className="px-5 py-2.5 bg-purple-600 text-white hover:bg-purple-700 rounded-lg font-semibold text-14 transition-colors disabled:opacity-50 shadow-lg"
                         >
-                          {processingAuction === auction.auction_id ? 'Running...' : 'Run Clearing'}
+                          {processingAuction === auction.auction_id ? t('auction.running') : t('auction.runClearing')}
                         </button>
                       )}
                     </div>
@@ -212,22 +214,22 @@ export default function OperatorDashboard() {
       {/* All Auctions - Pipeline View */}
       <div className="bg-white rounded-lg border border-gray-200">
         <div className="px-6 py-4 border-b border-gray-100">
-          <h2 className="text-20 font-semibold text-gray-900">All Auctions</h2>
-          <p className="text-14 text-gray-600 mt-0.5">Complete auction pipeline</p>
+          <h2 className="text-20 font-semibold text-gray-900">{t('dashboard.operator.allAuctions')}</h2>
+          <p className="text-14 text-gray-600 mt-0.5">{t('dashboard.operator.allAuctionsDesc')}</p>
         </div>
 
         <div className="divide-y divide-gray-100">
           {loading ? (
             <div className="p-12 text-center">
-              <div className="text-14 text-gray-500">Loading auctions...</div>
+              <div className="text-14 text-gray-500">{t('common.loading')}</div>
             </div>
           ) : auctions && auctions.length === 0 ? (
             <div className="p-12 text-center">
               <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
-              <p className="text-16 text-gray-500 font-medium mb-2">No auctions found</p>
-              <p className="text-14 text-gray-400 mb-4">Create your first auction to get started</p>
+              <p className="text-16 text-gray-500 font-medium mb-2">{t('dashboard.operator.noAuctions')}</p>
+              <p className="text-14 text-gray-400 mb-4">{t('dashboard.operator.noAuctionsDesc')}</p>
               <Link
                 href="/auctions/create"
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-14 transition-colors"
@@ -235,7 +237,7 @@ export default function OperatorDashboard() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Create Auction
+                {t('dashboard.operator.createAuction')}
               </Link>
             </div>
           ) : (
@@ -260,24 +262,24 @@ export default function OperatorDashboard() {
 
                     <div className="grid grid-cols-5 gap-4 text-14">
                       <div>
-                        <div className="text-gray-500 text-12 mb-0.5">Auction ID</div>
+                        <div className="text-gray-500 text-12 mb-0.5">{t('auction.id')}</div>
                         <div className="font-mono text-gray-900">#{auction.auction_id}</div>
                       </div>
                       <div>
-                        <div className="text-gray-500 text-12 mb-0.5">Lots</div>
+                        <div className="text-gray-500 text-12 mb-0.5">{t('auction.lots')}</div>
                         <div className="text-gray-900 font-semibold">{auction.lots_count || 0}</div>
                       </div>
                       <div>
-                        <div className="text-gray-500 text-12 mb-0.5">Bids</div>
+                        <div className="text-gray-500 text-12 mb-0.5">{t('auction.bids')}</div>
                         <div className="text-gray-900 font-semibold">{auction.bids_count || 0}</div>
                       </div>
                       <div>
-                        <div className="text-gray-500 text-12 mb-0.5">Closes</div>
+                        <div className="text-gray-500 text-12 mb-0.5">{t('auction.closes')}</div>
                         <div className="text-gray-900">{formatDateTime(auction.ends_at).split(' ')[0]}</div>
                       </div>
                       {auction.cleared_price !== null && (
                         <div>
-                          <div className="text-gray-500 text-12 mb-0.5">Cleared</div>
+                          <div className="text-gray-500 text-12 mb-0.5">{t('dashboard.operator.cleared')}</div>
                           <div className="font-semibold text-purple-600">
                             ¥{auction.cleared_price.toFixed(2)}/kWh
                           </div>
@@ -291,7 +293,7 @@ export default function OperatorDashboard() {
                       href={`/auctions/${auction.auction_id}`}
                       className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg font-medium text-14 transition-colors"
                     >
-                      View Details
+                      {t('auction.viewDetails')}
                     </Link>
 
                     {auction.status === 'open' && (
@@ -300,7 +302,7 @@ export default function OperatorDashboard() {
                         disabled={processingAuction === auction.auction_id}
                         className="px-5 py-2.5 bg-yellow-600 text-white hover:bg-yellow-700 rounded-lg font-semibold text-14 transition-colors disabled:opacity-50"
                       >
-                        {processingAuction === auction.auction_id ? 'Locking...' : 'Lock'}
+                        {processingAuction === auction.auction_id ? t('auction.locking') : t('auction.lock')}
                       </button>
                     )}
 
@@ -310,7 +312,7 @@ export default function OperatorDashboard() {
                         disabled={processingAuction === auction.auction_id}
                         className="px-5 py-2.5 bg-blue-600 text-white hover:bg-blue-700 rounded-lg font-semibold text-14 transition-colors disabled:opacity-50"
                       >
-                        {processingAuction === auction.auction_id ? 'Running...' : 'Clear'}
+                        {processingAuction === auction.auction_id ? t('auction.running') : t('auction.clear')}
                       </button>
                     )}
 
@@ -319,7 +321,7 @@ export default function OperatorDashboard() {
                         href={`/auctions/${auction.auction_id}`}
                         className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-14 transition-colors"
                       >
-                        View Report
+                        {t('auction.viewReport')}
                       </Link>
                     )}
                   </div>
