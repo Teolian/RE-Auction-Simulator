@@ -37,6 +37,13 @@ export default function CreateAuction() {
 
     setLoading(true)
     try {
+      console.log('Creating auction with data:', {
+        mode: formData.mode,
+        area: formData.area.trim(),
+        starts_at: new Date(formData.startsAt).toISOString(),
+        ends_at: new Date(formData.endsAt).toISOString(),
+      })
+
       const auction = await api.createAuction({
         mode: formData.mode,
         area: formData.area.trim(),
@@ -44,11 +51,14 @@ export default function CreateAuction() {
         ends_at: new Date(formData.endsAt).toISOString(),
       })
 
+      console.log('Auction created successfully:', auction)
+
       // Redirect to the auction detail page
       router.push(`/auctions/${auction.auction_id}`)
     } catch (err) {
       console.error('Failed to create auction:', err)
-      setError((err as Error).message || 'Failed to create auction')
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create auction. Please check the console for details.'
+      setError(errorMessage)
       setLoading(false)
     }
   }
