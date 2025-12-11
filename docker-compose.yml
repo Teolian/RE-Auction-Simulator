@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: re_auction_db
+    environment:
+      POSTGRES_DB: re_auction
+      POSTGRES_USER: re_user
+      POSTGRES_PASSWORD: re_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/migrations/001_initial_schema.sql:/docker-entrypoint-initdb.d/001_initial_schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U re_user -d re_auction"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./apps
+      dockerfile: api/Dockerfile
+    container_name: re_auction_api
+    environment:
+      DATABASE_URL: postgresql://re_user:re_password@db:5432/re_auction
+      TZ: Asia/Tokyo
+      ALLOWED_ORIGINS: http://localhost:3000,http://frontend:3000
+      JWT_SECRET: dev-secret-key-change-in-production
+      API_TOKEN: dev-api-token
+      RATE_LIMIT_PER_MINUTE: 60
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./apps/api:/app
+      - ./apps/engine:/app/engine
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    container_name: re_auction_frontend
+    environment:
+      NEXT_PUBLIC_API_BASE: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
